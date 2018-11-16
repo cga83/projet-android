@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">projet-android</string>
+    <string name="boutonAccueil">Entrer</string>
 </resources>
