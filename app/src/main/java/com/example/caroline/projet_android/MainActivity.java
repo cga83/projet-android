@@ -8,13 +8,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.caroline.projet_android.model.LieuxTournage;
+import com.example.caroline.projet_android.model.LieuxTournageRecord;
 import com.example.caroline.projet_android.model.LieuxTournageRecords;
-import com.example.caroline.projet_android.services.TournageDatabaseService;
 import com.example.caroline.projet_android.services.TournageWebService;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     TournageWebService tournageWebService = retrofit.create(TournageWebService.class);
 
-    TournageDatabaseService tournageDatabaseService;
+//    TournageDatabaseService tournageDatabaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
         Call<LieuxTournageRecords> lieux = tournageWebService.getAllTournages("search");
 
-        tournageDatabaseService = com.example.caroline.projet_android.services.AppDatabase.getAppDatabase(this)
-                .getTournagesDatabaseService();
+//        tournageDatabaseService = com.example.caroline.projet_android.services.AppDatabase.getAppDatabase(this)
+//                .getTournagesDatabaseService();
 
         loadLieuxTournagesFromServer();
     }
@@ -60,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 .appendPath("1.0")
                 .appendPath("search")
                 .appendQueryParameter("dataset", "tournagesdefilmsparis2011")
+                .appendQueryParameter("rows", "2805")
                 .appendQueryParameter("facet", "realisateur")
                 .appendQueryParameter("facet", "organisme_demandeur")
                 .appendQueryParameter("facet","type_de_tournage")
@@ -70,10 +69,14 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<LieuxTournageRecords> call,
                                            @NonNull Response<LieuxTournageRecords> response) {
                         LieuxTournageRecords serverTournages = response.body();
-//                        if (serverTournages != null) {
-//                            lieuxTournages.addAll(serverTournages);
-//                            //displayTournagesList();
-//                        }
+                        if (serverTournages != null) {
+                            for (LieuxTournageRecord record :
+                                    serverTournages.getTournages()) {
+                                lieuxTournages.add(record.getFields());
+                            }
+                            System.out.println("done");
+                            //TODO : displayTournagesList();
+                        }
                     }
 
                     @Override

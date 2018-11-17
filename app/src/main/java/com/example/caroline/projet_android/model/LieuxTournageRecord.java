@@ -4,7 +4,6 @@ import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 
 public class LieuxTournageRecord {
 
@@ -16,12 +15,16 @@ public class LieuxTournageRecord {
     @SerializedName("fields")
     private LieuxTournage fields;
 
+    @SerializedName("geometry")
+    private Geometry geometry;
+
     LieuxTournageRecord() {}
 
-    LieuxTournageRecord(String datasetid, String recordid, LieuxTournage fields) {
+    LieuxTournageRecord(String datasetid, String recordid, LieuxTournage fields, Geometry geometry) {
         this.datasetid = datasetid;
         this.recordid = recordid;
         this.fields = fields;
+        this.geometry  = geometry;
     }
 
     public String getDatasetid() {
@@ -48,4 +51,11 @@ public class LieuxTournageRecord {
         this.fields = fields;
     }
 
+    public Geometry getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(Geometry geometry) {
+        this.geometry = geometry;
+    }
 }
