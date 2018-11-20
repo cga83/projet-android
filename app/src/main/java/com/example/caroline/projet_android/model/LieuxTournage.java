@@ -7,10 +7,11 @@ import android.arch.persistence.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 
-public class LieuxTournage {
+public class LieuxTournage implements Serializable {
     @SerializedName("type_de_tournage")
     private String typeDeTournage;
     @SerializedName("organisme_demandeur")

@@ -55,7 +55,13 @@ public class MainActivity extends AppCompatActivity {
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //Création du bundle
+                Bundle bundle = new Bundle();
+                //Ajout des données au bundle
+                bundle.putSerializable("TOURNAGES", lieuxTournages);
                 Intent intent = new Intent(MainActivity.this, Maps.class);
+                //Ajout du bundle à l'intent
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -71,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
                 .appendPath("1.0")
                 .appendPath("search")
                 .appendQueryParameter("dataset", "tournagesdefilmsparis2011")
-                .appendQueryParameter("rows", "2805")
+                //.appendQueryParameter("rows", "2805")
+                .appendQueryParameter("rows", "10")
                 .appendQueryParameter("facet", "realisateur")
                 .appendQueryParameter("facet", "organisme_demandeur")
                 .appendQueryParameter("facet","type_de_tournage")
