@@ -23,8 +23,10 @@ public class PositionConverter {
     public String positionsToStoredString( List<Double> cl) {
         String value = "";
 
-        for (double pos : cl)
-            value += pos + ",";
+        if (cl!=null){
+            for (double pos : cl)
+                value += pos + ",";
+        }
 
         return value;
     }

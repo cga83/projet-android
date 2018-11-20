@@ -4,6 +4,8 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import com.example.caroline.projet_android.model.LieuxTournage;
+import com.example.caroline.projet_android.services.AppDatabase;
+import com.example.caroline.projet_android.services.TournageDatabaseService;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -17,24 +19,22 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private ArrayList<LieuxTournage> lieuxTournages;
+    private List<LieuxTournage> lieuxTournages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        Bundle bundle = getIntent().getExtras();
-        //On extrait les données…
-        if(bundle!=null)
-        {
-            System.out.println("test");
-            lieuxTournages = (ArrayList<LieuxTournage>) bundle.getSerializable("TOURNAGES");
-        }
+        //On récupère les données dans la database
+        TournageDatabaseService tournageDatabaseService = AppDatabase.getAppDatabase(this).getTournagesDatabaseService();
+        lieuxTournages = tournageDatabaseService.getAll();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_tournages);
         mapFragment.getMapAsync(this);

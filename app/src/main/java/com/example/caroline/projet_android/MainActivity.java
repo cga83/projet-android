@@ -13,10 +13,12 @@ import android.widget.Toast;
 import com.example.caroline.projet_android.model.LieuxTournage;
 import com.example.caroline.projet_android.model.LieuxTournageRecord;
 import com.example.caroline.projet_android.model.LieuxTournageRecords;
+import com.example.caroline.projet_android.services.AppDatabase;
 import com.example.caroline.projet_android.services.TournageDatabaseService;
 import com.example.caroline.projet_android.services.TournageWebService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,24 +47,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Call<LieuxTournageRecords> lieux = tournageWebService.getAllTournages("search");
 
-        tournageDatabaseService = com.example.caroline.projet_android.services.AppDatabase.getAppDatabase(this).getTournagesDatabaseService();
+        tournageDatabaseService = AppDatabase.getAppDatabase(this).getTournagesDatabaseService();
 
-        loadLieuxTournagesFromServer();
+        if (tournageDatabaseService.getAll().size()>0) {
+            loadLieuxTournagesFromDatabase();
+        } else {
+            loadLieuxTournagesFromServer();
+        }
 
         final Button button = (findViewById(R.id.button_enter_app));
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //Création du bundle
-                Bundle bundle = new Bundle();
-                //Ajout des données au bundle
-                bundle.putSerializable("TOURNAGES", lieuxTournages);
                 Intent intent = new Intent(MainActivity.this, Maps.class);
-                //Ajout du bundle à l'intent
-                intent.putExtras(bundle);
-
                 startActivity(intent);
             }
         });
@@ -94,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                             for (LieuxTournageRecord record :
                                     serverTournages.getTournages()) {
                                 lieuxTournages.add(record.getFields());
+                                tournageDatabaseService.insert(record.getFields());
                             }
                             System.out.println("done");
                             //TODO : displayTournagesList();
@@ -106,6 +105,15 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Nous n'avons pas pu chargé les lieux de tournages.", Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    private void loadLieuxTournagesFromDatabase() {
+        lieuxTournages.clear();
+        List<LieuxTournage> dbLieuxTournages = tournageDatabaseService.getAll();
+
+        if (dbLieuxTournages != null) {
+            lieuxTournages.addAll(dbLieuxTournages);
+        }
     }
 
 }
