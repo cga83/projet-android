@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 .appendPath("search")
                 .appendQueryParameter("dataset", "tournagesdefilmsparis2011")
                 //.appendQueryParameter("rows", "2805")
-                .appendQueryParameter("rows", "10")
+                .appendQueryParameter("rows", "400")
                 .appendQueryParameter("facet", "realisateur")
                 .appendQueryParameter("facet", "organisme_demandeur")
                 .appendQueryParameter("facet","type_de_tournage")

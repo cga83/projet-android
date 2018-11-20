@@ -99,6 +99,10 @@ public class LieuxTournage implements Serializable {
         return xy;
     }
 
+    public Double getX() { return xy.get(0); }
+
+    public Double getY() { return xy.get(1); }
+
     public void setXy(List<Double> xy) {
         this.xy = xy;
     }
