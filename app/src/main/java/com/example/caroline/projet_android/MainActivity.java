@@ -1,10 +1,13 @@
 package com.example.caroline.projet_android;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.caroline.projet_android.model.LieuxTournage;
@@ -22,6 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     private static final String BASE_URL = "opendata.paris.fr";
+    private static final int CREATE_MAPS_ACTIVITY = 1;
 
     private ArrayList<LieuxTournage> lieuxTournages = new ArrayList<>();
 
@@ -46,6 +50,15 @@ public class MainActivity extends AppCompatActivity {
 //                .getTournagesDatabaseService();
 
         loadLieuxTournagesFromServer();
+
+        final Button button = (findViewById(R.id.button_enter_app));
+
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Maps.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void loadLieuxTournagesFromServer() {
