@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">projet-android</string>
+    <string name="app_name">Lieux de tournages Parisiens</string>
     <string name="boutonAccueil">Entrer</string>
     <string name="title_activity_maps">Map</string>
 </resources>
