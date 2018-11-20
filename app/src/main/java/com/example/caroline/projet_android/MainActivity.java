@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.caroline.projet_android.model.LieuxTournage;
 import com.example.caroline.projet_android.model.LieuxTournageRecord;
 import com.example.caroline.projet_android.model.LieuxTournageRecords;
+import com.example.caroline.projet_android.services.TournageDatabaseService;
 import com.example.caroline.projet_android.services.TournageWebService;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     TournageWebService tournageWebService = retrofit.create(TournageWebService.class);
 
-//    TournageDatabaseService tournageDatabaseService;
+    TournageDatabaseService tournageDatabaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         Call<LieuxTournageRecords> lieux = tournageWebService.getAllTournages("search");
 
-//        tournageDatabaseService = com.example.caroline.projet_android.services.AppDatabase.getAppDatabase(this)
-//                .getTournagesDatabaseService();
+        tournageDatabaseService = com.example.caroline.projet_android.services.AppDatabase.getAppDatabase(this).getTournagesDatabaseService();
 
         loadLieuxTournagesFromServer();
 
@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, Maps.class);
                 //Ajout du bundle à l'intent
                 intent.putExtras(bundle);
+
                 startActivity(intent);
             }
         });
@@ -69,21 +70,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadLieuxTournagesFromServer() {
         lieuxTournages.clear();
-        Uri.Builder yri = new Uri.Builder();
-        yri.scheme("https")
+        Uri.Builder uri = new Uri.Builder();
+        uri.scheme("https")
                 .authority(BASE_URL)
                 .appendPath("api")
                 .appendPath("records")
                 .appendPath("1.0")
                 .appendPath("search")
                 .appendQueryParameter("dataset", "tournagesdefilmsparis2011")
-                //.appendQueryParameter("rows", "2805")
-                .appendQueryParameter("rows", "700")
+                //.appendQueryParameter("rows", "2805") // Chargement de toutes les données
+               .appendQueryParameter("rows", "700")
                 .appendQueryParameter("facet", "realisateur")
                 .appendQueryParameter("facet", "organisme_demandeur")
                 .appendQueryParameter("facet","type_de_tournage")
                 .appendQueryParameter("facet","ardt");
-        tournageWebService.getAllTournages(yri.build().toString())
+        tournageWebService.getAllTournages(uri.build().toString())
                 .enqueue(new Callback<LieuxTournageRecords>() {
                     @Override
                     public void onResponse(@NonNull Call<LieuxTournageRecords> call,
@@ -102,8 +103,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Call<LieuxTournageRecords> call,
                                           @NonNull Throwable t) {
-                        Toast.makeText(MainActivity.this, "Nous n'avons pas pu chargé les lieux de tournages.", Toast.LENGTH_LONG)
-                                .show();
+                        Toast.makeText(MainActivity.this, "Nous n'avons pas pu chargé les lieux de tournages.", Toast.LENGTH_LONG).show();
                     }
                 });
     }

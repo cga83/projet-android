@@ -3,15 +3,21 @@ package com.example.caroline.projet_android.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-
+@Entity(tableName = "lieuxTournage")
 public class LieuxTournage implements Serializable {
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     @SerializedName("type_de_tournage")
     private String typeDeTournage;
     @SerializedName("organisme_demandeur")
@@ -23,6 +29,7 @@ public class LieuxTournage implements Serializable {
     @SerializedName("realisateur")
     private String realisateur;
     @SerializedName("xy")
+    @TypeConverters(PositionConverter.class)
     private List<Double> xy = null;
     @SerializedName("ardt")
     private Integer ardt;
@@ -95,7 +102,7 @@ public class LieuxTournage implements Serializable {
         this.realisateur = realisateur;
     }
 
-    public List<Double> getXy() {
+    public  List<Double> getXy() {
         return xy;
     }
 
@@ -103,8 +110,8 @@ public class LieuxTournage implements Serializable {
 
     public Double getY() { return xy.get(1); }
 
-    public void setXy(List<Double> xy) {
-        this.xy = xy;
+    public void setXy( List<Double> xy) {
+        this.xy=xy;
     }
 
     public Integer getArdt() {
@@ -130,5 +137,16 @@ public class LieuxTournage implements Serializable {
     public void setDateDebut(String dateDebut) {
         this.dateDebut = dateDebut;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
+
 
 }
