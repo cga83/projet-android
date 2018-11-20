@@ -8,7 +8,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.Serializable;
@@ -51,11 +53,22 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         // Ajout des markers
         LatLng premierMarker = new LatLng(lieuxTournages.get(0).getX(), lieuxTournages.get(0).getY());
-        mMap.addMarker(new MarkerOptions().position(premierMarker).title("Un tournage a eu lieu ici !"));
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(premierMarker));
+        for (LieuxTournage lieux: lieuxTournages) {
+            System.err.println(lieux.getTitre());
+            if (lieux.getXy() != null) // Certains films n'ont pas de position associée
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(lieux.getX(), lieux.getY()))
+                        .title(lieux.getTitre()));
+        }
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(premierMarker, 12));
     }
+
 }
+
+
