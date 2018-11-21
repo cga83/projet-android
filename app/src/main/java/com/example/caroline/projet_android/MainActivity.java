@@ -28,7 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     private static final String BASE_URL = "opendata.paris.fr";
-    private static final int CREATE_MAPS_ACTIVITY = 1;
+    private static final String NB_ROWS = "2805";
 
     private ArrayList<LieuxTournage> lieuxTournages = new ArrayList<>();
 
@@ -77,8 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 .appendPath("1.0")
                 .appendPath("search")
                 .appendQueryParameter("dataset", "tournagesdefilmsparis2011")
-                //.appendQueryParameter("rows", "2805") // Chargement de toutes les données
-               .appendQueryParameter("rows", "700")
+                .appendQueryParameter("rows", NB_ROWS) // Chargement de toutes les données
                 .appendQueryParameter("facet", "realisateur")
                 .appendQueryParameter("facet", "organisme_demandeur")
                 .appendQueryParameter("facet","type_de_tournage")
@@ -88,12 +87,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call<LieuxTournageRecords> call,
                                            @NonNull Response<LieuxTournageRecords> response) {
+                        tournageDatabaseService.dropAll();
                         LieuxTournageRecords serverTournages = response.body();
                         if (serverTournages != null) {
                             for (LieuxTournageRecord record :
                                     serverTournages.getTournages()) {
                                 lieuxTournages.add(record.getFields());
-//                                if (record.getFields().getXy()!=null)
                                 tournageDatabaseService.insert(record.getFields());
                             }
                             System.out.println("done");

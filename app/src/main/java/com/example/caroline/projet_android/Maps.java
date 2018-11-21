@@ -63,7 +63,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                             .title(lieux.getTitre()));
             }
 
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParis, 10));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParis, 14));
         }
     }
 
