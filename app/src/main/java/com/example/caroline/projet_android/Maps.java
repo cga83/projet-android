@@ -10,6 +10,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -58,9 +59,26 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             for (LieuxTournage lieux : lieuxTournages) {
                 System.err.println(lieux.getTitre());
                 if (lieux.getXySize()>0) // Certains films n'ont pas de position associée
+                {
+                    if (lieux.getTypeDeTournage().equals("LONG METRAGE"))
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(lieux.getX(), lieux.getY()))
+                                .icon(BitmapDescriptorFactory
+                                        .defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                .title(lieux.getTitre()));
+                    else if (lieux.getTypeDeTournage().equals("TELEFILM"))
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(lieux.getX(), lieux.getY()))
+                                .icon(BitmapDescriptorFactory
+                                        .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                                .title(lieux.getTitre()));
+                    else if (lieux.getTypeDeTournage().equals("SERIE TELEVISEE"))
                     mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(lieux.getX(), lieux.getY()))
+                            .icon(BitmapDescriptorFactory
+                                    .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                             .title(lieux.getTitre()));
+                }
             }
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParis, 14));
