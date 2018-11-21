@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadLieuxTournagesFromServer() {
         lieuxTournages.clear();
+        //tournageDatabaseService.dropAll();
         Uri.Builder uri = new Uri.Builder();
         uri.scheme("https")
                 .authority(BASE_URL)
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                             for (LieuxTournageRecord record :
                                     serverTournages.getTournages()) {
                                 lieuxTournages.add(record.getFields());
+//                                if (record.getFields().getXy()!=null)
                                 tournageDatabaseService.insert(record.getFields());
                             }
                             System.out.println("done");

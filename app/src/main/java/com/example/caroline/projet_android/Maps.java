@@ -28,6 +28,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
         //On récupère les données dans la database
         TournageDatabaseService tournageDatabaseService = AppDatabase.getAppDatabase(this).getTournagesDatabaseService();
+        lieuxTournages.clear();
         lieuxTournages = tournageDatabaseService.getAll();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -50,18 +51,20 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-        // Ajout des markers
-        LatLng premierMarker = new LatLng(lieuxTournages.get(0).getX(), lieuxTournages.get(0).getY());
+        if (lieuxTournages.size()>0) {
+            // Ajout des markers
+            LatLng markerParis = new LatLng(48.861391, 2.334044);
 
-        for (LieuxTournage lieux: lieuxTournages) {
-            System.err.println(lieux.getTitre());
-            if (lieux.getXy() != null) // Certains films n'ont pas de position associée
-                mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(lieux.getX(), lieux.getY()))
-                        .title(lieux.getTitre()));
+            for (LieuxTournage lieux : lieuxTournages) {
+                System.err.println(lieux.getTitre());
+                if (lieux.getXySize()>0) // Certains films n'ont pas de position associée
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(lieux.getX(), lieux.getY()))
+                            .title(lieux.getTitre()));
+            }
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParis, 10));
         }
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(premierMarker, 12));
     }
 
 }

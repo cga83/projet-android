@@ -17,6 +17,9 @@ public interface TournageDatabaseService {
     @Query("SELECT * FROM lieuxTournage")
     List<LieuxTournage> getAll();
 
+//    @Query("DROP * FROM lieuxTournage")
+//    List<LieuxTournage> dropAll();
+
     @Insert
     void insert(LieuxTournage... lieuxTournages);
 

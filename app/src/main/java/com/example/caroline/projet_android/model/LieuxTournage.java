@@ -101,6 +101,8 @@ public class LieuxTournage implements Serializable {
         return xy;
     }
 
+    public int getXySize() { return xy.size(); }
+
     public Double getX() { return xy.get(0); }
 
     public Double getY() { return xy.get(1); }

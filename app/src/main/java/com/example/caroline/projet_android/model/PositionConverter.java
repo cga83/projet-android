@@ -14,7 +14,10 @@ public class PositionConverter {
         List<Double> positions = new ArrayList<>();
         for (String pos :
                 stringPositions) {
-            positions.add(Double.parseDouble(pos));
+            if (pos!=null && !pos.equals(""))
+                positions.add(Double.parseDouble(pos));
+            else
+                System.out.println("here");
         }
         return positions;
     }
