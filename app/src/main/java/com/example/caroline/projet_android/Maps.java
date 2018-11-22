@@ -1,7 +1,12 @@
 package com.example.caroline.projet_android;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.caroline.projet_android.model.LieuxTournage;
 import com.example.caroline.projet_android.services.AppDatabase;
@@ -51,7 +56,52 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        // Ajout d'un InfoWindowAdapter car les snippets ne tenaient pas sur une ligne
         mMap.setInfoWindowAdapter(new CustomWindowInfoAdapter(Maps.this));
+
+        final Button button = (findViewById(R.id.button_filters));
+
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final ArrayList<Integer> mSelectedItems = new ArrayList<>();
+                CharSequence[] mPossibleItems = new CharSequence[3];
+                mPossibleItems[0] = "TELEFILM";
+                mPossibleItems[1] = "LONG METRAGE";
+                mPossibleItems[2] = "SERIE TELEVISEE";
+                AlertDialog.Builder builder = new AlertDialog.Builder(Maps.this); //Read Update
+                builder.setTitle("Choisis un filtre !")
+                        .setMessage("Quel type de tournage souhaites-tu voir sur la carte ?")
+                        .setMultiChoiceItems(mPossibleItems, null, new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                if (isChecked) {
+                                    // If the user checked the item, add it to the selected items
+                                    mSelectedItems.add(which);
+                                } else if (mSelectedItems.contains(which)) {
+                                    // Else, if the item is already in the array, remove it
+                                    mSelectedItems.remove(Integer.valueOf(which));
+                                }
+                            }
+                        })
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                // TO DO
+                            }
+                        })
+                        .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // TO DO
+                            }
+                        });
+
+
+
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
 
         if (lieuxTournages.size()>0) {
             // Ajout des markers
