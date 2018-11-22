@@ -51,33 +51,51 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setInfoWindowAdapter(new CustomWindowInfoAdapter(Maps.this));
 
         if (lieuxTournages.size()>0) {
             // Ajout des markers
             LatLng markerParis = new LatLng(48.861391, 2.334044);
 
             for (LieuxTournage lieux : lieuxTournages) {
-                System.err.println(lieux.getTitre());
                 if (lieux.getXySize()>0) // Certains films n'ont pas de position associée
                 {
                     if (lieux.getTypeDeTournage().equals("LONG METRAGE"))
                         mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(lieux.getX(), lieux.getY()))
                                 .icon(BitmapDescriptorFactory
-                                        .defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                                .title(lieux.getTitre()));
+                                        .defaultMarker(0))
+//                                .icon(BitmapDescriptorFactory
+//                                        .defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                .title(lieux.getTitre())
+                                .snippet("Tournage réalisé par " + lieux.getRealisateur() +
+                                        " à l'adresse " +lieux.getAdresse() + " ("
+                                        + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
+                                        + lieux.getDateFin() + "."));
                     else if (lieux.getTypeDeTournage().equals("TELEFILM"))
                         mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(lieux.getX(), lieux.getY()))
                                 .icon(BitmapDescriptorFactory
-                                        .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
-                                .title(lieux.getTitre()));
+                                        .defaultMarker(50))
+                                //.icon(BitmapDescriptorFactory
+                                //        .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                                .title(lieux.getTitre())
+                                .snippet("Tournage réalisé par " + lieux.getRealisateur() +
+                                        " à l'adresse " +lieux.getAdresse() + " ("
+                                        + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
+                                        + lieux.getDateFin() + "."));
                     else if (lieux.getTypeDeTournage().equals("SERIE TELEVISEE"))
                     mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(lieux.getX(), lieux.getY()))
                             .icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                            .title(lieux.getTitre()));
+                                    .defaultMarker(25))
+                            //.icon(BitmapDescriptorFactory
+                            //        .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                            .title(lieux.getTitre())
+                            .snippet("Tournage réalisé par " + lieux.getRealisateur() +
+                                    " à l'adresse " +lieux.getAdresse() + " ("
+                                    + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
+                                    + lieux.getDateFin() + "."));
                 }
             }
 
