@@ -26,6 +26,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private List<LieuxTournage> lieuxTournages = new ArrayList<>();
+    private boolean[] mSelectedItems = new boolean[3]; // ce tableau contient les filtres cochés
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,11 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         TournageDatabaseService tournageDatabaseService = AppDatabase.getAppDatabase(this).getTournagesDatabaseService();
         lieuxTournages.clear();
         lieuxTournages = tournageDatabaseService.getAll();
+
+        // Au départ, tous les items sont cochés
+        mSelectedItems[0] = true;
+        mSelectedItems[1] = true;
+        mSelectedItems[2] = true;
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_tournages);
@@ -63,35 +69,28 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final ArrayList<Integer> mSelectedItems = new ArrayList<>();
                 CharSequence[] mPossibleItems = new CharSequence[3];
-                mPossibleItems[0] = "TELEFILM";
-                mPossibleItems[1] = "LONG METRAGE";
-                mPossibleItems[2] = "SERIE TELEVISEE";
+                mPossibleItems[0] = "Téléfilm";
+                mPossibleItems[1] = "Long Métrage";
+                mPossibleItems[2] = "Série Télévisée";
                 AlertDialog.Builder builder = new AlertDialog.Builder(Maps.this); //Read Update
                 builder.setTitle("Choisis un filtre !")
-                        .setMessage("Quel type de tournage souhaites-tu voir sur la carte ?")
-                        .setMultiChoiceItems(mPossibleItems, null, new DialogInterface.OnMultiChoiceClickListener() {
+                        .setMultiChoiceItems(mPossibleItems, mSelectedItems, new DialogInterface.OnMultiChoiceClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                                 if (isChecked) {
                                     // If the user checked the item, add it to the selected items
-                                    mSelectedItems.add(which);
-                                } else if (mSelectedItems.contains(which)) {
+                                    mSelectedItems[which] = true;
+                                } else {
                                     // Else, if the item is already in the array, remove it
-                                    mSelectedItems.remove(Integer.valueOf(which));
+                                    mSelectedItems[which] =  false;
                                 }
                             }
                         })
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                // TO DO
-                            }
-                        })
-                        .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // TO DO
+                                addMarkersToMap();
                             }
                         });
 
@@ -103,38 +102,43 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             }
         });
 
-        if (lieuxTournages.size()>0) {
-            // Ajout des markers
-            LatLng markerParis = new LatLng(48.861391, 2.334044);
 
-            for (LieuxTournage lieux : lieuxTournages) {
-                if (lieux.getXySize()>0) // Certains films n'ont pas de position associée
-                {
-                    if (lieux.getTypeDeTournage().equals("LONG METRAGE"))
-                        mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(lieux.getX(), lieux.getY()))
-                                .icon(BitmapDescriptorFactory
-                                        .defaultMarker(0))
+        // Ajout des markers
+        addMarkersToMap();
+        }
+
+    private void addMarkersToMap() {
+        mMap.clear();
+        LatLng markerParis = new LatLng(48.861391, 2.334044);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParis, 14));
+        for (LieuxTournage lieux : lieuxTournages) {
+            if (lieux.getXySize()>0) // Certains films n'ont pas de position associée
+            {
+                if (lieux.getTypeDeTournage().equals("LONG METRAGE") && mSelectedItems[0])
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(lieux.getX(), lieux.getY()))
+                            .icon(BitmapDescriptorFactory
+                                    .defaultMarker(0))
 //                                .icon(BitmapDescriptorFactory
 //                                        .defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                                .title(lieux.getTitre())
-                                .snippet("Tournage réalisé par " + lieux.getRealisateur() +
-                                        " à l'adresse " +lieux.getAdresse() + " ("
-                                        + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
-                                        + lieux.getDateFin() + "."));
-                    else if (lieux.getTypeDeTournage().equals("TELEFILM"))
-                        mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(lieux.getX(), lieux.getY()))
-                                .icon(BitmapDescriptorFactory
-                                        .defaultMarker(50))
-                                //.icon(BitmapDescriptorFactory
-                                //        .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
-                                .title(lieux.getTitre())
-                                .snippet("Tournage réalisé par " + lieux.getRealisateur() +
-                                        " à l'adresse " +lieux.getAdresse() + " ("
-                                        + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
-                                        + lieux.getDateFin() + "."));
-                    else if (lieux.getTypeDeTournage().equals("SERIE TELEVISEE"))
+                            .title(lieux.getTitre())
+                            .snippet("Tournage réalisé par " + lieux.getRealisateur() +
+                                    " à l'adresse " +lieux.getAdresse() + " ("
+                                    + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
+                                    + lieux.getDateFin() + "."));
+                else if (lieux.getTypeDeTournage().equals("TELEFILM") && mSelectedItems[1])
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(lieux.getX(), lieux.getY()))
+                            .icon(BitmapDescriptorFactory
+                                    .defaultMarker(50))
+                            //.icon(BitmapDescriptorFactory
+                            //        .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                            .title(lieux.getTitre())
+                            .snippet("Tournage réalisé par " + lieux.getRealisateur() +
+                                    " à l'adresse " +lieux.getAdresse() + " ("
+                                    + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
+                                    + lieux.getDateFin() + "."));
+                else if (lieux.getTypeDeTournage().equals("SERIE TELEVISEE") && mSelectedItems[2])
                     mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(lieux.getX(), lieux.getY()))
                             .icon(BitmapDescriptorFactory
@@ -146,13 +150,10 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                                     " à l'adresse " +lieux.getAdresse() + " ("
                                     + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
                                     + lieux.getDateFin() + "."));
-                }
             }
-
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParis, 14));
         }
     }
-
 }
+
 
 
