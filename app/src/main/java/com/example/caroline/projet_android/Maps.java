@@ -28,6 +28,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     private List<LieuxTournage> lieuxTournages = new ArrayList<>();
     private boolean[] mSelectedItems = new boolean[3]; // ce tableau contient les filtres cochés
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,15 +94,10 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                                 addMarkersToMap();
                             }
                         });
-
-
-
-
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             }
         });
-
 
         // Ajout des markers
         addMarkersToMap();
@@ -114,25 +110,19 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         for (LieuxTournage lieux : lieuxTournages) {
             if (lieux.getXySize()>0) // Certains films n'ont pas de position associée
             {
-                if (lieux.getTypeDeTournage().equals("LONG METRAGE") && mSelectedItems[0])
+                if (lieux.getTypeDeTournage().equals("LONG METRAGE") && mSelectedItems[1])
                     mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(lieux.getX(), lieux.getY()))
-                            .icon(BitmapDescriptorFactory
-                                    .defaultMarker(0))
-//                                .icon(BitmapDescriptorFactory
-//                                        .defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.long_metrage))
                             .title(lieux.getTitre())
                             .snippet("Tournage réalisé par " + lieux.getRealisateur() +
                                     " à l'adresse " +lieux.getAdresse() + " ("
                                     + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
                                     + lieux.getDateFin() + "."));
-                else if (lieux.getTypeDeTournage().equals("TELEFILM") && mSelectedItems[1])
+                else if (lieux.getTypeDeTournage().equals("TELEFILM") && mSelectedItems[0])
                     mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(lieux.getX(), lieux.getY()))
-                            .icon(BitmapDescriptorFactory
-                                    .defaultMarker(50))
-                            //.icon(BitmapDescriptorFactory
-                            //        .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.telefilm))
                             .title(lieux.getTitre())
                             .snippet("Tournage réalisé par " + lieux.getRealisateur() +
                                     " à l'adresse " +lieux.getAdresse() + " ("
@@ -141,10 +131,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                 else if (lieux.getTypeDeTournage().equals("SERIE TELEVISEE") && mSelectedItems[2])
                     mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(lieux.getX(), lieux.getY()))
-                            .icon(BitmapDescriptorFactory
-                                    .defaultMarker(25))
-                            //.icon(BitmapDescriptorFactory
-                            //        .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.serie_tv))
                             .title(lieux.getTitre())
                             .snippet("Tournage réalisé par " + lieux.getRealisateur() +
                                     " à l'adresse " +lieux.getAdresse() + " ("
