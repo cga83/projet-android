@@ -29,7 +29,9 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private List<LieuxTournage> lieuxTournages = new ArrayList<>();
     private boolean[] mSelectedItems = new boolean[3]; // ce tableau contient les filtres cochés
-    private ClusterManager<LieuxTournageClusterItem> clusterManager;
+    private ClusterManager<LieuxTournageClusterItem> clusterManagerLongMetrage;
+    private ClusterManager<LieuxTournageClusterItem> clusterManagerTelefilm;
+    private ClusterManager<LieuxTournageClusterItem> clusterManagerSerie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +107,9 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         });
 
         // Initialisation du cluster manager
-        clusterManager = new ClusterManager<LieuxTournageClusterItem>(this, googleMap);
+        clusterManagerLongMetrage = new ClusterManager<LieuxTournageClusterItem>(this, googleMap);
+        clusterManagerTelefilm = new ClusterManager<LieuxTournageClusterItem>(this, googleMap);
+        clusterManagerSerie = new ClusterManager<LieuxTournageClusterItem>(this, googleMap);
 
         // Ajout des markers
         addMarkersToMap();
@@ -117,7 +121,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             if (lieux.getXySize()>0) // Certains films n'ont pas de position associée
             {
                 if (lieux.getTypeDeTournage().equals("LONG METRAGE") && mSelectedItems[1])
-                    clusterManager.addItem(new LieuxTournageClusterItem(lieux));
+                    clusterManagerLongMetrage.addItem(new LieuxTournageClusterItem(lieux));
                     /*mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(lieux.getX(), lieux.getY()))
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.long_metrage))
@@ -127,7 +131,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                                     + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
                                     + lieux.getDateFin() + "."));*/
                 else if (lieux.getTypeDeTournage().equals("TELEFILM") && mSelectedItems[0])
-                    clusterManager.addItem(new LieuxTournageClusterItem(lieux));
+                    clusterManagerTelefilm.addItem(new LieuxTournageClusterItem(lieux));
                     /*mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(lieux.getX(), lieux.getY()))
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.telefilm))
@@ -137,7 +141,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                                     + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
                                     + lieux.getDateFin() + "."));*/
                 else if (lieux.getTypeDeTournage().equals("SERIE TELEVISEE") && mSelectedItems[2])
-                    clusterManager.addItem(new LieuxTournageClusterItem(lieux));
+                    clusterManagerSerie.addItem(new LieuxTournageClusterItem(lieux));
                     /*mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(lieux.getX(), lieux.getY()))
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.serie_tv))
@@ -149,7 +153,9 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
             }
         }
-        if (clusterManager!=null) clusterManager.cluster();
+        if (clusterManagerTelefilm!=null) clusterManagerTelefilm.cluster();
+        if (clusterManagerLongMetrage!=null) clusterManagerLongMetrage.cluster();
+        if (clusterManagerSerie!=null) clusterManagerSerie.cluster();
     }
 }
 
