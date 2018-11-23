@@ -146,9 +146,10 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                                     " à l'adresse " +lieux.getAdresse() + " ("
                                     + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
                                     + lieux.getDateFin() + "."));*/
-                clusterManager.cluster();
+
             }
         }
+        if (clusterManager!=null) clusterManager.cluster();
     }
 }
 
