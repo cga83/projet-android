@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.caroline.projet_android.model.LieuxTournage;
+import com.example.caroline.projet_android.model.LieuxTournageClusterItem;
 import com.example.caroline.projet_android.services.AppDatabase;
 import com.example.caroline.projet_android.services.TournageDatabaseService;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private List<LieuxTournage> lieuxTournages = new ArrayList<>();
     private boolean[] mSelectedItems = new boolean[3]; // ce tableau contient les filtres cochés
-
+    private ClusterManager<LieuxTournageClusterItem> clusterManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,9 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         // Ajout d'un InfoWindowAdapter car les snippets ne tenaient pas sur une ligne
         mMap.setInfoWindowAdapter(new CustomWindowInfoAdapter(Maps.this));
+        // On positionne la carte au centre de Paris
+        LatLng markerParis = new LatLng(48.861391, 2.334044);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParis, 14));
 
         final Button button = (findViewById(R.id.button_filters));
 
@@ -99,44 +104,49 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             }
         });
 
+        // Initialisation du cluster manager
+        clusterManager = new ClusterManager<LieuxTournageClusterItem>(this, googleMap);
+
         // Ajout des markers
         addMarkersToMap();
-        }
+    }
 
     private void addMarkersToMap() {
         mMap.clear();
-        LatLng markerParis = new LatLng(48.861391, 2.334044);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParis, 14));
         for (LieuxTournage lieux : lieuxTournages) {
             if (lieux.getXySize()>0) // Certains films n'ont pas de position associée
             {
                 if (lieux.getTypeDeTournage().equals("LONG METRAGE") && mSelectedItems[1])
-                    mMap.addMarker(new MarkerOptions()
+                    clusterManager.addItem(new LieuxTournageClusterItem(lieux));
+                    /*mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(lieux.getX(), lieux.getY()))
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.long_metrage))
                             .title(lieux.getTitre())
                             .snippet("Tournage réalisé par " + lieux.getRealisateur() +
                                     " à l'adresse " +lieux.getAdresse() + " ("
                                     + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
-                                    + lieux.getDateFin() + "."));
+                                    + lieux.getDateFin() + "."));*/
                 else if (lieux.getTypeDeTournage().equals("TELEFILM") && mSelectedItems[0])
-                    mMap.addMarker(new MarkerOptions()
+                    clusterManager.addItem(new LieuxTournageClusterItem(lieux));
+                    /*mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(lieux.getX(), lieux.getY()))
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.telefilm))
                             .title(lieux.getTitre())
                             .snippet("Tournage réalisé par " + lieux.getRealisateur() +
                                     " à l'adresse " +lieux.getAdresse() + " ("
                                     + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
-                                    + lieux.getDateFin() + "."));
+                                    + lieux.getDateFin() + "."));*/
                 else if (lieux.getTypeDeTournage().equals("SERIE TELEVISEE") && mSelectedItems[2])
-                    mMap.addMarker(new MarkerOptions()
+                    clusterManager.addItem(new LieuxTournageClusterItem(lieux));
+                    /*mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(lieux.getX(), lieux.getY()))
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.serie_tv))
                             .title(lieux.getTitre())
                             .snippet("Tournage réalisé par " + lieux.getRealisateur() +
                                     " à l'adresse " +lieux.getAdresse() + " ("
                                     + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
-                                    + lieux.getDateFin() + "."));
+                                    + lieux.getDateFin() + "."));*/
+                clusterManager.cluster();
             }
         }
     }
