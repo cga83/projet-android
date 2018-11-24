@@ -134,10 +134,15 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
 
     @Override
     public void entrerToList() {
-        MovieListFragment listFragment = new MovieListFragment();
-        FragmentTransaction fragmentTransaction1 = fragmentManager.beginTransaction();
-        fragmentTransaction1.replace(R.id.container, listFragment);
-        fragmentTransaction1.commit();
+//        MovieListFragment listFragment = new MovieListFragment();
+////        FragmentTransaction fragmentTransaction1 = fragmentManager.beginTransaction();
+////        fragmentTransaction1.replace(R.id.container, listFragment);
+////        fragmentTransaction1.commit();
+        fragmentManager = getSupportFragmentManager();
+        InfoFragment info = new InfoFragment();
+        FragmentTransaction fragmentTransaction2 = fragmentManager.beginTransaction();
+        fragmentTransaction2.replace(R.id.container, info);
+        fragmentTransaction2.commit();
     }
 
     @Override
