@@ -1,5 +1,6 @@
 package com.example.caroline.projet_android;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,8 @@ import com.example.caroline.projet_android.fragment.InfoFragment;
 import com.example.caroline.projet_android.fragment.InfoFragmentInterface;
 import com.example.caroline.projet_android.fragment.MovieListFragment;
 import com.example.caroline.projet_android.fragment.MovieListFragmentInterface;
+import com.example.caroline.projet_android.fragment.MoviesMapFragment;
+import com.example.caroline.projet_android.fragment.MoviesMapFragmentInterface;
 import com.example.caroline.projet_android.fragment.WelcomeScreenFragment;
 import com.example.caroline.projet_android.fragment.WelcomeScreenFragmentInterface;
 import com.example.caroline.projet_android.model.ElementListMovie;
@@ -37,7 +40,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements MovieListFragmentInterface, WelcomeScreenFragmentInterface, InfoFragmentInterface {
+public class MainActivity extends AppCompatActivity implements MovieListFragmentInterface, WelcomeScreenFragmentInterface, InfoFragmentInterface, MoviesMapFragmentInterface {
     private static final String BASE_URL = "opendata.paris.fr";
     private static final String NB_ROWS = "2805";
 
@@ -165,7 +168,13 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
                 entrerToList();
                 return true;
             case R.id.map:
-
+//                Intent intent = new Intent(MainActivity.this, Maps.class);
+//                startActivity(intent);
+                fragmentManager = getSupportFragmentManager();
+                MoviesMapFragment map = new MoviesMapFragment();
+                FragmentTransaction fragmentTransaction1 = fragmentManager.beginTransaction();
+                fragmentTransaction1.replace(R.id.container, map);
+                fragmentTransaction1.commit();
                 return true;
             case R.id.info:
                 fragmentManager = getSupportFragmentManager();
