@@ -5,8 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.caroline.projet_android.model.LieuxTournage;
 import com.example.caroline.projet_android.model.LieuxTournageClusterItem;
@@ -19,13 +22,21 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class Maps extends FragmentActivity implements OnMapReadyCallback {
+public class Maps extends FragmentActivity implements OnMapReadyCallback,
+        ClusterManager.OnClusterClickListener<LieuxTournageClusterItem>,
+        ClusterManager.OnClusterItemClickListener<LieuxTournageClusterItem>,
+        ClusterManager.OnClusterItemInfoWindowClickListener<LieuxTournageClusterItem> {
 
     private GoogleMap mMap;
     private List<LieuxTournage> lieuxTournages = new ArrayList<>();
@@ -116,6 +127,18 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         // Ajout des markers
         clusterManagerLongMetrage.setRenderer(rendererLongMetrage);
         addMarkersToMap();
+
+        mMap.setOnCameraIdleListener(clusterManagerLongMetrage);
+        mMap.setOnMarkerClickListener(clusterManagerLongMetrage);
+        clusterManagerLongMetrage.setOnClusterClickListener(this);
+        clusterManagerLongMetrage.setOnClusterItemClickListener(this);
+        clusterManagerLongMetrage.setOnClusterItemInfoWindowClickListener(this);
+
+        clusterManagerLongMetrage.getMarkerCollection()
+                .setOnInfoWindowAdapter(new CustomWindowInfoAdapter(Maps.this));
+
+        mMap.setInfoWindowAdapter(clusterManagerLongMetrage.getMarkerManager());
+
     }
 
     private void addMarkersToMap() {
@@ -159,6 +182,36 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         if (clusterManagerTelefilm!=null) clusterManagerTelefilm.cluster();
         if (clusterManagerLongMetrage!=null) clusterManagerLongMetrage.cluster();
         if (clusterManagerSerie!=null) clusterManagerSerie.cluster();
+    }
+
+    @Override
+    public boolean onClusterClick(Cluster<LieuxTournageClusterItem> cluster) {
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+        Collection<LieuxTournageClusterItem> lieuxTournagesMarkers = cluster.getItems();
+
+        for (ClusterItem item : lieuxTournagesMarkers) {
+            LatLng lieuxTournagePosition = item.getPosition();
+            builder.include(lieuxTournagePosition);
+        }
+
+        final LatLngBounds bounds = builder.build();
+
+        try { mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+        } catch (Exception error) {
+            System.err.println(error);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onClusterItemClick(LieuxTournageClusterItem lieuxTournageClusterItem) {
+        return false;
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(LieuxTournageClusterItem lieuxTournageClusterItem) {
+
     }
 }
 

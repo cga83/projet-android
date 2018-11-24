@@ -6,10 +6,17 @@ import com.google.maps.android.clustering.ClusterItem;
 public class LieuxTournageClusterItem implements ClusterItem {
     private double latitude;
     private double longitude;
+    private String titre;
+    private String snippet;
 
     public LieuxTournageClusterItem(LieuxTournage lieuxTournage) {
         latitude = lieuxTournage.getX();
         longitude = lieuxTournage.getY();
+        titre = lieuxTournage.getTitre();
+        snippet = "Tournage réalisé par " + lieuxTournage.getRealisateur() +
+                " à l'adresse " +lieuxTournage.getAdresse() + " ("
+                + lieuxTournage.getArdt() + ") entre " + lieuxTournage.getDateDebut() + " et "
+                + lieuxTournage.getDateFin() + ".";
     }
 
     public LieuxTournageClusterItem(Double latitude, Double longitude) {
@@ -24,11 +31,11 @@ public class LieuxTournageClusterItem implements ClusterItem {
 
     @Override
     public String getTitle() {
-        return null;
+        return titre;
     }
 
     @Override
     public String getSnippet() {
-        return null;
+        return snippet;
     }
 }
