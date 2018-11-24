@@ -9,10 +9,12 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
 
     public TextView titre;
     public TextView adresse;
+    public ImageView logo;
 
     public MovieViewHolder(View rootView) {
         super(rootView);
         this.titre = rootView.findViewById(R.id.titre);
         this.adresse = rootView.findViewById(R.id.adresse);
+        this.logo = rootView.findViewById(R.id.image);
     }
 }

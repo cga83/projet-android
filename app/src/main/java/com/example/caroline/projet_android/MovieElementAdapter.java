@@ -25,6 +25,15 @@ public class MovieElementAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
         viewholder.titre.setText(iconToDisplay.getTitre());
         viewholder.adresse.setText(iconToDisplay.getAdresse() + " " +iconToDisplay.getArdt());
+        if(iconToDisplay.getTypeTournage().equals("TELEFILM")) {
+            viewholder.logo.setImageResource(R.drawable.ic_videocam_blue_24dp);
+
+        } else if (iconToDisplay.getTypeTournage().equals("LONG METRAGE")) {
+            viewholder.logo.setImageResource(R.drawable.ic_videocam_black_24dp);
+
+        } else {
+            viewholder.logo.setImageResource(R.drawable.ic_videocam_red_24dp);
+        }
     }
 
     public int getItemCount() {
