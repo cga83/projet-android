@@ -20,6 +20,7 @@ import com.example.caroline.projet_android.fragment.MovieListFragment;
 import com.example.caroline.projet_android.fragment.MovieListFragmentInterface;
 import com.example.caroline.projet_android.fragment.WelcomeScreenFragment;
 import com.example.caroline.projet_android.fragment.WelcomeScreenFragmentInterface;
+import com.example.caroline.projet_android.model.ElementListMovie;
 import com.example.caroline.projet_android.model.LieuxTournage;
 import com.example.caroline.projet_android.model.LieuxTournageRecord;
 import com.example.caroline.projet_android.model.LieuxTournageRecords;
@@ -134,8 +135,16 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
 
     @Override
     public void entrerToList() {
+        Bundle bundle = new Bundle();
+        ArrayList<ElementListMovie> listMovies = new ArrayList<ElementListMovie>();
+        lieuxTournages.forEach(lieuxTournage ->
+                listMovies.add(lieuxTournage.elementList()));
+
+        bundle.putSerializable("movies", listMovies);
+
         MovieListFragment listFragment = new MovieListFragment();
         fragmentManager = getSupportFragmentManager();
+        listFragment.setArguments(bundle);
 
         FragmentTransaction fragmentTransaction2 = fragmentManager.beginTransaction();
         fragmentTransaction2.replace(R.id.container, listFragment);
@@ -153,11 +162,7 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.list:
-                fragmentManager = getSupportFragmentManager();
-                MovieListFragment movieListFragment = new MovieListFragment();
-                FragmentTransaction fragmentTransaction1 = fragmentManager.beginTransaction();
-                fragmentTransaction1.replace(R.id.container, movieListFragment);
-                fragmentTransaction1.commit();
+                entrerToList();
                 return true;
             case R.id.map:
 

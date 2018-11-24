@@ -24,7 +24,7 @@ public class MovieElementAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         ElementListMovie iconToDisplay = this.icons.get(position);
 
         viewholder.titre.setText(iconToDisplay.getTitre());
-        viewholder.annee.setText(iconToDisplay.getAnnee());
+        viewholder.adresse.setText(iconToDisplay.getAdresse() + " " +iconToDisplay.getArdt());
     }
 
     public int getItemCount() {

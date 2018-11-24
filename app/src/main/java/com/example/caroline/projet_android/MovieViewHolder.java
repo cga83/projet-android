@@ -8,11 +8,11 @@ import android.widget.TextView;
 public class MovieViewHolder extends RecyclerView.ViewHolder {
 
     public TextView titre;
-    public TextView annee;
+    public TextView adresse;
 
     public MovieViewHolder(View rootView) {
         super(rootView);
         this.titre = rootView.findViewById(R.id.titre);
-        this.annee = rootView.findViewById(R.id.annee);
+        this.adresse = rootView.findViewById(R.id.adresse);
     }
 }

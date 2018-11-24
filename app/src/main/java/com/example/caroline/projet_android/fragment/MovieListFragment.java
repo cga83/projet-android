@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.example.caroline.projet_android.MovieElementAdapter;
 import com.example.caroline.projet_android.R;
 import com.example.caroline.projet_android.model.ElementListMovie;
+import com.example.caroline.projet_android.model.LieuxTournage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,9 @@ public class MovieListFragment extends Fragment {
         // Inflate the layout for this fragment
 
 
+        Bundle bundle = getArguments();
+        ArrayList<ElementListMovie> movies =(ArrayList<ElementListMovie>) bundle.getSerializable("movies");
+
         View rootview = inflater.inflate(R.layout.fragment_movie_list, container, false);
 
         rcvMovie = rootview.findViewById(R.id.a_main_rcv_movies);
@@ -46,10 +50,10 @@ public class MovieListFragment extends Fragment {
         rcvMovie.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        ElementListMovie movie = new ElementListMovie("Harry Potter", "2012");
-
-        movies.add(movie);
-        movies.add(movie);
+//        ElementListMovie movie = new ElementListMovie("Harry Potter", "2012");
+//
+//        movies.add(movie);
+//        movies.add(movie);
         movieAdapter = new MovieElementAdapter(movies);
         rcvMovie.setAdapter(movieAdapter);
 
