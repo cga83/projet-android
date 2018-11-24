@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.example.caroline.projet_android.model.LieuxTournage;
 import com.example.caroline.projet_android.model.LieuxTournageClusterItem;
+import com.example.caroline.projet_android.model.LongMetrageClusterRender;
 import com.example.caroline.projet_android.services.AppDatabase;
 import com.example.caroline.projet_android.services.TournageDatabaseService;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -108,10 +109,12 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
         // Initialisation du cluster manager
         clusterManagerLongMetrage = new ClusterManager<LieuxTournageClusterItem>(this, googleMap);
+        LongMetrageClusterRender rendererLongMetrage = new LongMetrageClusterRender(this, googleMap, clusterManagerLongMetrage);
         clusterManagerTelefilm = new ClusterManager<LieuxTournageClusterItem>(this, googleMap);
         clusterManagerSerie = new ClusterManager<LieuxTournageClusterItem>(this, googleMap);
 
         // Ajout des markers
+        clusterManagerLongMetrage.setRenderer(rendererLongMetrage);
         addMarkersToMap();
     }
 
@@ -130,26 +133,26 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                                     " à l'adresse " +lieux.getAdresse() + " ("
                                     + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
                                     + lieux.getDateFin() + "."));*/
-                else if (lieux.getTypeDeTournage().equals("TELEFILM") && mSelectedItems[0])
-                    clusterManagerTelefilm.addItem(new LieuxTournageClusterItem(lieux));
-                    /*mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(lieux.getX(), lieux.getY()))
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.telefilm))
-                            .title(lieux.getTitre())
-                            .snippet("Tournage réalisé par " + lieux.getRealisateur() +
-                                    " à l'adresse " +lieux.getAdresse() + " ("
-                                    + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
-                                    + lieux.getDateFin() + "."));*/
-                else if (lieux.getTypeDeTournage().equals("SERIE TELEVISEE") && mSelectedItems[2])
-                    clusterManagerSerie.addItem(new LieuxTournageClusterItem(lieux));
-                    /*mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(lieux.getX(), lieux.getY()))
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.serie_tv))
-                            .title(lieux.getTitre())
-                            .snippet("Tournage réalisé par " + lieux.getRealisateur() +
-                                    " à l'adresse " +lieux.getAdresse() + " ("
-                                    + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
-                                    + lieux.getDateFin() + "."));*/
+//                else if (lieux.getTypeDeTournage().equals("TELEFILM") && mSelectedItems[0])
+//                    clusterManagerTelefilm.addItem(new LieuxTournageClusterItem(lieux));
+//                    /*mMap.addMarker(new MarkerOptions()
+//                            .position(new LatLng(lieux.getX(), lieux.getY()))
+//                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.telefilm))
+//                            .title(lieux.getTitre())
+//                            .snippet("Tournage réalisé par " + lieux.getRealisateur() +
+//                                    " à l'adresse " +lieux.getAdresse() + " ("
+//                                    + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
+//                                    + lieux.getDateFin() + "."));*/
+//                else if (lieux.getTypeDeTournage().equals("SERIE TELEVISEE") && mSelectedItems[2])
+//                    clusterManagerSerie.addItem(new LieuxTournageClusterItem(lieux));
+//                    /*mMap.addMarker(new MarkerOptions()
+//                            .position(new LatLng(lieux.getX(), lieux.getY()))
+//                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.serie_tv))
+//                            .title(lieux.getTitre())
+//                            .snippet("Tournage réalisé par " + lieux.getRealisateur() +
+//                                    " à l'adresse " +lieux.getAdresse() + " ("
+//                                    + lieux.getArdt() + ") entre " + lieux.getDateDebut() + " et "
+//                                    + lieux.getDateFin() + "."));*/
 
             }
         }
