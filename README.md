@@ -105,5 +105,13 @@ Lorsque l'on clique sur un marker, des informations apparaissent. Etant donné q
 ![Snippet](screenshot/snippet.png?raw=true "Snippet")
 
 #### Filtrage
+Afin d'améliorer l'expérience utilisateur, nous avons ajouté un boutton sur la Map pour permettre le filtrage. Lorsque l'on clique sur le bouton, une alertDialog est créée :
+
+![Filter](screenshot/filter.png?raw=true "Filter")
+
+L'information choix coché/décoché est stocké dans un tableau ```mSelectedItems```. Ce tableau est constitué de trois éléments (un pour chaque choix), tous initialisé à ```true```. Lorsqu'un choix est décoché, l'élément du tableau correspondant passe à false. La carte est vidée de ces markers et ils sont ajoutés à nouveau (si l'utilisateur a choisi de les afficher).
+
+En ne sélectionnant que les longs métrages, cela donne :
+![Long Metrage](screenshot/long_metrage.png?raw=true "Long Metrage")
 
 
