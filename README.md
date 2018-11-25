@@ -89,6 +89,20 @@ Nous avons 2801 lieux de tournages. Sur la carte, cela fait beaucoup de markers 
 ![Clusters](screenshot/clusters.png?raw=true "Clusters")
 
 #### Personnalisation des clusters
+Afin de personnaliser les markers (et clusters) en fonction du type de tournage, une Map de ClusterManager :
+```private EnumMap<TypeTournage, ClusterManager<LieuxTournageClusterItem>> clusterMap = new EnumMap<>(TypeTournage.class);```
+Nous avons ensuite créé des ClusterRender différents pour chaque type de tournage : ```LongMetrageClusterRender```, ```TelefilmClusterRender``` et ```SerieClusterRender```. 
+Des icones différents ont été utilisés pour les markers et des couleurs différentes pour les clusters.
+
+![Maps](screenshot/maps.png?raw=true "Maps")
+
+Lorsque l'on clique sur un cluster, on zoome :
+
+![Maps](screenshot/maps_zoom.png?raw=true "Maps")
+
+Lorsque l'on clique sur un marker, des informations apparaissent. Etant donné qu'elles ne tenaient pas dans un simple snippet, un ```CustomWindowInfoAdapter``` a été créé. Cela a permis de personnaliser l'apparence :
+
+![Snippet](screenshot/snippet.png?raw=true "Snippet")
 
 #### Filtrage
 
