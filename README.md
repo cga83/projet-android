@@ -84,9 +84,13 @@ Pour le stockage dans cette base de donnée locale, le champ geometry a posé pr
 ### Map
 ## Création de la Map
 
-
 ## Utilisation de clusters
 
 ## Personnalisation des clusters
+
+## Filtrage
+
+## FragmentActivity -> Fragment
+Initialement, la Map était un FragmentActivity. Pour faciliter le fonctionnement de la toolbar, elle a été transformée en Fragment. Pour cela, il a fallu faire plusieurs modifications (```onCreateView``` plutôt que ```onCreateView```, ```getActivity().getApplicationContext()``` pour récupérer le contexte...)
 
 
