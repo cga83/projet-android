@@ -171,7 +171,8 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
 //                Intent intent = new Intent(MainActivity.this, Maps.class);
 //                startActivity(intent);
                 fragmentManager = getSupportFragmentManager();
-                MoviesMapFragment map = new MoviesMapFragment();
+//                MoviesMapFragment map = new MoviesMapFragment();
+                Maps map = new Maps();
                 FragmentTransaction fragmentTransaction1 = fragmentManager.beginTransaction();
                 fragmentTransaction1.replace(R.id.container, map);
                 fragmentTransaction1.commit();
