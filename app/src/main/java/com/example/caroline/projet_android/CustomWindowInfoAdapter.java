@@ -1,13 +1,10 @@
 package com.example.caroline.projet_android;
 
 import android.content.Context;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.caroline.projet_android.model.LieuxTournage;
-import com.example.caroline.projet_android.model.LieuxTournageClusterItem;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 

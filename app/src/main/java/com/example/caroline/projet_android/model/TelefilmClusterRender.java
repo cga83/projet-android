@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.support.v4.content.ContextCompat;
 
 import com.example.caroline.projet_android.R;
-import com.example.caroline.projet_android.model.LieuxTournageClusterItem;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
