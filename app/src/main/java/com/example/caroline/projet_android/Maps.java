@@ -20,6 +20,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
@@ -113,12 +115,16 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
             }
         });
 
+
+
+        MarkerManager globalMarkerManager = new MarkerManager(mMap);
+
         // Initialisation du cluster manager
-        clusterManagerLongMetrage = new ClusterManager<LieuxTournageClusterItem>(this, googleMap);
+        clusterManagerLongMetrage = new ClusterManager<LieuxTournageClusterItem>(this, googleMap, globalMarkerManager);
         LongMetrageClusterRender rendererLongMetrage = new LongMetrageClusterRender(this, googleMap, clusterManagerLongMetrage);
-        clusterManagerTelefilm = new ClusterManager<LieuxTournageClusterItem>(this, googleMap);
+        clusterManagerTelefilm = new ClusterManager<LieuxTournageClusterItem>(this, googleMap, globalMarkerManager);
         TelefilmClusterRender rendererTelefilm = new TelefilmClusterRender(this, googleMap, clusterManagerTelefilm);
-        clusterManagerSerie = new ClusterManager<LieuxTournageClusterItem>(this, googleMap);
+        clusterManagerSerie = new ClusterManager<LieuxTournageClusterItem>(this, googleMap, globalMarkerManager);
         SerieClusterRender rendererSerie = new SerieClusterRender(this, googleMap, clusterManagerSerie);
 
 
@@ -129,12 +135,17 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
         addMarkersToMap();
 
         // Ajout des action listener
-        mMap.setOnCameraIdleListener(clusterManagerLongMetrage);
-        mMap.setOnMarkerClickListener(clusterManagerLongMetrage);
-        mMap.setOnCameraIdleListener(clusterManagerTelefilm);
-        mMap.setOnMarkerClickListener(clusterManagerTelefilm);
-        mMap.setOnCameraIdleListener(clusterManagerSerie);
-        mMap.setOnMarkerClickListener(clusterManagerSerie);
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                clusterManagerTelefilm.cluster();
+                clusterManagerSerie.cluster();
+                clusterManagerLongMetrage.cluster();
+            }
+        });
+
+        mMap.setOnMarkerClickListener(globalMarkerManager);
+        mMap.setInfoWindowAdapter(globalMarkerManager);
         clusterManagerLongMetrage.setOnClusterClickListener(this);
         clusterManagerLongMetrage.setOnClusterItemClickListener(this);
         clusterManagerLongMetrage.setOnClusterItemInfoWindowClickListener(this);
@@ -147,13 +158,10 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
 
         clusterManagerLongMetrage.getMarkerCollection()
                 .setOnInfoWindowAdapter(new CustomWindowInfoAdapter(Maps.this));
-        mMap.setInfoWindowAdapter(clusterManagerLongMetrage.getMarkerManager());
         clusterManagerTelefilm.getMarkerCollection()
                 .setOnInfoWindowAdapter(new CustomWindowInfoAdapter(Maps.this));
-        mMap.setInfoWindowAdapter(clusterManagerTelefilm.getMarkerManager());
         clusterManagerSerie.getMarkerCollection()
                 .setOnInfoWindowAdapter(new CustomWindowInfoAdapter(Maps.this));
-        mMap.setInfoWindowAdapter(clusterManagerSerie.getMarkerManager());
 
     }
 
