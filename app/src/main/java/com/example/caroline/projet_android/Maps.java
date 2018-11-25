@@ -12,6 +12,7 @@ import com.example.caroline.projet_android.model.LieuxTournageClusterItem;
 import com.example.caroline.projet_android.model.LongMetrageClusterRender;
 import com.example.caroline.projet_android.model.SerieClusterRender;
 import com.example.caroline.projet_android.model.TelefilmClusterRender;
+import com.example.caroline.projet_android.model.TypeTournage;
 import com.example.caroline.projet_android.services.AppDatabase;
 import com.example.caroline.projet_android.services.TournageDatabaseService;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,9 +26,11 @@ import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.List;
 
 public class Maps extends FragmentActivity implements OnMapReadyCallback,
@@ -38,9 +41,10 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
     private GoogleMap mMap;
     private List<LieuxTournage> lieuxTournages = new ArrayList<>();
     private boolean[] mSelectedItems = new boolean[3]; // ce tableau contient les filtres cochés
-    private ClusterManager<LieuxTournageClusterItem> clusterManagerLongMetrage;
-    private ClusterManager<LieuxTournageClusterItem> clusterManagerTelefilm;
-    private ClusterManager<LieuxTournageClusterItem> clusterManagerSerie;
+    private EnumMap<TypeTournage, ClusterManager<LieuxTournageClusterItem>> clusterMap = new EnumMap<>(TypeTournage.class);
+//    private ClusterManager<LieuxTournageClusterItem> clusterManagerLongMetrage;
+//    private ClusterManager<LieuxTournageClusterItem> clusterManagerTelefilm;
+//    private ClusterManager<LieuxTournageClusterItem> clusterManagerSerie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,53 +119,49 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
             }
         });
 
-
-
         MarkerManager globalMarkerManager = new MarkerManager(mMap);
 
         // Initialisation du cluster manager
-        clusterManagerLongMetrage = new ClusterManager<LieuxTournageClusterItem>(this, googleMap, globalMarkerManager);
-        LongMetrageClusterRender rendererLongMetrage = new LongMetrageClusterRender(this, googleMap, clusterManagerLongMetrage);
-        clusterManagerTelefilm = new ClusterManager<LieuxTournageClusterItem>(this, googleMap, globalMarkerManager);
-        TelefilmClusterRender rendererTelefilm = new TelefilmClusterRender(this, googleMap, clusterManagerTelefilm);
-        clusterManagerSerie = new ClusterManager<LieuxTournageClusterItem>(this, googleMap, globalMarkerManager);
-        SerieClusterRender rendererSerie = new SerieClusterRender(this, googleMap, clusterManagerSerie);
+
+        for (TypeTournage type : TypeTournage.values()){
+            ClusterManager<LieuxTournageClusterItem> clusterManager = new ClusterManager<>(this, googleMap, globalMarkerManager);
+            switch (type){
+                case SERIE:
+                    clusterManager.setRenderer(new SerieClusterRender(this, googleMap, clusterManager));
+                    break;
+                case TELEFILM:
+                    clusterManager.setRenderer(new TelefilmClusterRender(this, googleMap, clusterManager));
+                    break;
+                case LONG_METRAGE:
+                    clusterManager.setRenderer(new LongMetrageClusterRender(this, googleMap, clusterManager));
+                    break;
+            }
+            clusterManager.setOnClusterClickListener(this);
+            clusterManager.setOnClusterItemClickListener(this);
+            clusterManager.setOnClusterItemInfoWindowClickListener(this);
+            clusterManager.getMarkerCollection()
+                    .setOnInfoWindowAdapter(new CustomWindowInfoAdapter(Maps.this));
+            clusterMap.put(type, clusterManager);
+        }
 
 
         // Ajout des markers
-        clusterManagerLongMetrage.setRenderer(rendererLongMetrage);
-        clusterManagerTelefilm.setRenderer(rendererTelefilm);
-        clusterManagerSerie.setRenderer(rendererSerie);
         addMarkersToMap();
 
         // Ajout des action listener
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
-                clusterManagerTelefilm.cluster();
-                clusterManagerSerie.cluster();
-                clusterManagerLongMetrage.cluster();
+                for (ClusterManager cluster :
+                        clusterMap.values())
+                {
+                    cluster.cluster();
+                }
             }
         });
 
         mMap.setOnMarkerClickListener(globalMarkerManager);
-        mMap.setInfoWindowAdapter(globalMarkerManager);
-        clusterManagerLongMetrage.setOnClusterClickListener(this);
-        clusterManagerLongMetrage.setOnClusterItemClickListener(this);
-        clusterManagerLongMetrage.setOnClusterItemInfoWindowClickListener(this);
-        clusterManagerTelefilm.setOnClusterClickListener(this);
-        clusterManagerTelefilm.setOnClusterItemClickListener(this);
-        clusterManagerTelefilm.setOnClusterItemInfoWindowClickListener(this);
-        clusterManagerSerie.setOnClusterClickListener(this);
-        clusterManagerSerie.setOnClusterItemClickListener(this);
-        clusterManagerSerie.setOnClusterItemInfoWindowClickListener(this);
-
-        clusterManagerLongMetrage.getMarkerCollection()
-                .setOnInfoWindowAdapter(new CustomWindowInfoAdapter(Maps.this));
-        clusterManagerTelefilm.getMarkerCollection()
-                .setOnInfoWindowAdapter(new CustomWindowInfoAdapter(Maps.this));
-        clusterManagerSerie.getMarkerCollection()
-                .setOnInfoWindowAdapter(new CustomWindowInfoAdapter(Maps.this));
+        mMap.setInfoWindowAdapter(globalMarkerManager);;
 
     }
 
@@ -170,17 +170,14 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
         for (LieuxTournage lieux : lieuxTournages) {
             if (lieux.getXySize()>0) // Certains films n'ont pas de position associée
             {
-                if (lieux.getTypeDeTournage().equals("LONG METRAGE") && mSelectedItems[1])
-                    clusterManagerLongMetrage.addItem(new LieuxTournageClusterItem(lieux));
-                else if (lieux.getTypeDeTournage().equals("TELEFILM") && mSelectedItems[0])
-                    clusterManagerTelefilm.addItem(new LieuxTournageClusterItem(lieux));
-                else if (lieux.getTypeDeTournage().equals("SERIE TELEVISEE") && mSelectedItems[2])
-                    clusterManagerSerie.addItem(new LieuxTournageClusterItem(lieux));
+                if (lieux.getTypeDeTournage().equals(TypeTournage.LONG_METRAGE.toString()) && mSelectedItems[1])
+                    clusterMap.get(TypeTournage.of(lieux.getTypeDeTournage())).addItem(new LieuxTournageClusterItem(lieux));
+                else if (lieux.getTypeDeTournage().equals(TypeTournage.TELEFILM.toString()) && mSelectedItems[0])
+                    clusterMap.get(TypeTournage.of(lieux.getTypeDeTournage())).addItem(new LieuxTournageClusterItem(lieux));
+                else if (lieux.getTypeDeTournage().equals(TypeTournage.SERIE.toString())&& mSelectedItems[2])
+                    clusterMap.get(TypeTournage.of(lieux.getTypeDeTournage())).addItem(new LieuxTournageClusterItem(lieux));
             }
         }
-        if (clusterManagerTelefilm!=null) clusterManagerTelefilm.cluster();
-        if (clusterManagerLongMetrage!=null) clusterManagerLongMetrage.cluster();
-        if (clusterManagerSerie!=null) clusterManagerSerie.cluster();
     }
 
     @Override
