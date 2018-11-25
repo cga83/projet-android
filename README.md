@@ -8,7 +8,19 @@ Voici la page d'accueil de l'application :
 ![Ecran d'accueil](screenshot/accueil.png?raw=true "Application")
 
 ### Récupération des données
-## Requête API
+#### Données
+Les données dont nous disposons sont, pour chaque tournage :
+* type_de_tournage :	une String égale à "TELEFILM", "SERIE TELEVISEE" ou "LONG METRAGE"
+* organisme_demandeur :	une String correspondant à l'organisme demandeur du film
+* adresse	: une String correspond à l'adresse du tournage
+* date_debut : une String correspond à la date de début du tournage
+* date_fin : une String correspond à la date de fin du tournage
+* realisateur	: une String correspond au réalisateur
+* xy : un tableau de Double contenant les coordonnées [latitude, longitude]
+* ardt : Un entier correspondant à l'arrondissement dans lequel le tournage à eu lieu
+* titre	: Une string correspondant au titre du film/de la série
+
+#### Requête API
 Les données ont été trouvées sur [ce site](https://opendata.paris.fr/explore/dataset/tournagesdefilmsparis2011/api/).
 Une requête a été faite pour récupérer les données dans la MainActivity. Pour cela, un ```Uri.Builder``` a été utilisé : 
 ```
@@ -60,17 +72,24 @@ records
  La classe ```LieuxTournageRecords``` correspond au tableau records et a un attribut de type LieuxTournageRecord. La classe ```LieuxTournageRecord``` correspond à chaque élément de ce tableau. Elle a un attribut de type LieuxTournage, fields. 
  
 
-## Stockage dans une base de donnée locale
+#### Stockage dans une base de donnée locale
 Lorsque l'application est lancée pour la première fois, la requête sur l'API est effectué. Les données sont ensuite stockées dans une base de donnée locale. Cela permet à l'utilisateur d'utiliser l'application hors ligne. Cela permet également de charger les données plus rapidement. Cependant, il faudrait vérifier régulièrement que la base de donnée en ligne n'a pas été mise à jour !
 La librairie Room Persistence a été utilisée pour la base de donnée locale.
 
 Pour le stockage dans cette base de donnée locale, le champ geometry a posé problème. En effet, il n'était pas possible de le stocker directement comme un tableau de Double, il a fallu utiliser un TypeConverter (```PositionConverter```).
 
 ### Map
-## Création de la Map
+#### Création de la Map
+##### FragmentActivity -> Fragment
+Initialement, la Map était un FragmentActivity. Pour faciliter le fonctionnement de la toolbar, elle a été transformée en Fragment. Pour cela, il a fallu faire plusieurs modifications (```onCreateView``` plutôt que ```onCreateView```, ```getActivity().getApplicationContext()``` pour récupérer le contexte...)
 
-## Utilisation de clusters
+#### Utilisation de clusters
+Nous avons 2801 lieux de tournages. Sur la carte, cela fait beaucoup de markers et ce n'est pas très joli à voir... Nous avons donc utilisé des clusters de markers :
 
-## Personnalisation des clusters
+![Clusters](screenshot/clusters.png?raw=true "Clusters")
+
+#### Personnalisation des clusters
+
+#### Filtrage
 
 
