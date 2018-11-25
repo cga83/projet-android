@@ -21,6 +21,7 @@ import com.example.caroline.projet_android.services.AppDatabase;
 import com.example.caroline.projet_android.services.TournageDatabaseService;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraIdleListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
@@ -166,25 +167,21 @@ public class Maps extends Fragment implements OnMapReadyCallback,
             clusterMap.put(type, clusterManager);
         }
 
-
         // Ajout des markers
         addMarkersToMap();
 
         // Ajout des action listener
-        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-            @Override
-            public void onCameraIdle() {
-                addMarkersToMap();
+        mMap.setOnCameraIdleListener(()-> {
+            for (ClusterManager cluster : clusterMap.values()) {
+                cluster.cluster();
             }
         });
-
         mMap.setOnMarkerClickListener(globalMarkerManager);
-        mMap.setInfoWindowAdapter(globalMarkerManager);;
+        mMap.setInfoWindowAdapter(globalMarkerManager);
 
     }
 
     private void addMarkersToMap() {
-        mMap.clear();
         mMap.clear();
         for (ClusterManager cluster : clusterMap.values()) {
             cluster.clearItems();
@@ -217,7 +214,7 @@ public class Maps extends Fragment implements OnMapReadyCallback,
 
         final LatLngBounds bounds = builder.build();
 
-        try { mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
+        try { mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
         } catch (Exception error) {
             System.err.println(error);
         }
