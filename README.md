@@ -27,7 +27,44 @@ uri.scheme("https")
 ```
 Cela correspond à faire une requête à l'adresse https://opendata.paris.fr/api/records/1.0/search/?dataset=tournagesdefilmsparis2011&rows=2801&facet=realisateur&facet=organisme_demandeur&facet=type_de_tournage&facet=ardt.
 
+Lorsque l'on effectue la requête, un objet JSON est retourné. Il est du format:
+```
+parameters	{…}
+records	[…]
+facet_groups	[…]
+```
+
+Les données qui nous intéressent se trouvent dans ```records``` :
+```
+records
+  0	
+    datasetid	"tournagesdefilmsparis2011"
+    recordid	"865411d3110634059eff5d5edb8c7f0b076f9dd7"
+    fields	
+      type_de_tournage	"TELEFILM"
+      organisme_demandeur	"BIG BAND STORY"
+      adresse	"RUE  ROCHER/DE MADRID ET PORTALIS"
+      date_fin	"2016-03-31"
+      realisateur	"ARNAULD MERCADIER"
+      xy	[…]
+      ardt	75008
+      titre	"COUP DE FOUDRE A JAIPUR"
+      date_debut	"2016-03-31"
+    geometry	{…}
+    record_timestamp	"2018-01-09T16:34:10+00:00"
+  1	{…}
+  ...
+  2801 {..}
+ ```
+ Les données sur les tournages, qui se trouvent dans ```fields```, n'ont pas pu être récupérées immédiatement. Il a fallu créer une classe ```LieuxTournageRecords```, une classe ```LieuxTournageRecord``` et une classe ```LieuxTournage```.
+ La classe ```LieuxTournageRecords``` correspond au tableau records et a un attribut de type LieuxTournageRecord. La classe ```LieuxTournageRecord``` correspond à chaque élément de ce tableau. Elle a un attribut de type LieuxTournage, fields. 
+ 
+
 ## Stockage dans une base de donnée locale
+Lorsque l'application est lancée pour la première fois, la requête sur l'API est effectué. Les données sont ensuite stockées dans une base de donnée locale. Cela permet à l'utilisateur d'utiliser l'application hors ligne. Cela permet également de charger les données plus rapidement. Cependant, il faudrait vérifier régulièrement que la base de donnée en ligne n'a pas été mise à jour !
+La librairie Room Persistence a été utilisée pour la base de donnée locale.
+
+Pour le stockage dans cette base de donnée locale, le champ geometry a posé problème. En effet, il n'était pas possible de le stocker directement comme un tableau de Double, il a fallu utiliser un TypeConverter (```PositionConverter```).
 
 ### Map
 ## Création de la Map
