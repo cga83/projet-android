@@ -6,9 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.caroline.projet_android.model.ElementListMovie;
 
@@ -36,7 +34,7 @@ public class MovieElementAdapter extends RecyclerView.Adapter<MovieElementAdapte
 
     public void onBindViewHolder(MovieElementAdapter.MovieViewHolder viewholder, int position) {
         ElementListMovie iconToDisplay = this.icons.get(position);
-        viewholder.rowMainParentLinearLayout.setTag(iconToDisplay);
+        viewholder.constraintLayout.setTag(iconToDisplay);
 
 
         viewholder.titre.setText(iconToDisplay.getTitre());
@@ -70,15 +68,15 @@ public class MovieElementAdapter extends RecyclerView.Adapter<MovieElementAdapte
         public TextView titre;
         public TextView adresse;
         public ImageView logo;
-        public LinearLayout rowMainParentLinearLayout;
+        public ConstraintLayout constraintLayout;
 
         public MovieViewHolder(View rootView) {
             super(rootView);
             this.titre = rootView.findViewById(R.id.titre);
             this.adresse = rootView.findViewById(R.id.adresse);
             this.logo = rootView.findViewById(R.id.image);
-            rowMainParentLinearLayout = rootView.findViewById(R.id.row_main_adapter_linear_layout);
-            rowMainParentLinearLayout.setOnClickListener(new View.OnClickListener() {
+            constraintLayout = rootView.findViewById(R.id.row_main_adapter_linear_layout);
+            constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (onRecyclerViewMovieClickListener != null) {
