@@ -144,11 +144,7 @@ public class LieuxTournage implements Serializable {
     }
 
     public ElementListMovie elementList() {
-        ElementListMovie movie = new ElementListMovie(this.titre,this.ardt, this.adresse, this.typeDeTournage);
+        ElementListMovie movie = new ElementListMovie(this.titre,this.ardt, this.adresse, this.typeDeTournage, this.id);
         return movie;
     }
-
-
-
-
 }

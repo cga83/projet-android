@@ -17,6 +17,9 @@ public interface TournageDatabaseService {
     @Query("SELECT * FROM lieuxTournage")
     List<LieuxTournage> getAll();
 
+    @Query("SELECT * FROM lieuxTournage WHERE id = :id")
+    LieuxTournage getLieu(int id);
+
     @Query("DELETE FROM lieuxTournage")
     void dropAll();
 
