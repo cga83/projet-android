@@ -8,8 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.caroline.projet_android.MovieElementAdapter;
+import com.example.caroline.projet_android.OnRecyclerViewMovieClickListener;
 import com.example.caroline.projet_android.R;
 import com.example.caroline.projet_android.model.ElementListMovie;
 import com.example.caroline.projet_android.model.LieuxTournage;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MovieListFragment extends Fragment {
+public class MovieListFragment extends Fragment implements OnRecyclerViewMovieClickListener {
 
     private MovieListFragmentInterface mListener;
 
@@ -49,12 +51,14 @@ public class MovieListFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(rootview.getContext());
         rcvMovie.setLayoutManager(layoutManager);
 
+
         // specify an adapter (see also next example)
 //        ElementListMovie movie = new ElementListMovie("Harry Potter", "2012");
 //
 //        movies.add(movie);
 //        movies.add(movie);
         movieAdapter = new MovieElementAdapter(movies);
+        movieAdapter.setOnRecyclerViewMovieClickListener(this);
         rcvMovie.setAdapter(movieAdapter);
 
         return rootview;
@@ -76,5 +80,15 @@ public class MovieListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onMovieClick(int position, View view) {
+        ElementListMovie movie = (ElementListMovie) view.getTag();
+        switch (view.getId()) {
+            case R.id.row_main_adapter_linear_layout:
+                System.out.println("Position clicked: " + String.valueOf(position) + ", "+ movie.getTitre());
+                break;
+        }
     }
 }
