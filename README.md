@@ -8,6 +8,21 @@ Voici la page d'accueil de l'application :
 ![Ecran d'accueil](screenshot/accueil.png?raw=true "Application")
 
 ### Récupération des données
+## Données
+Les données dont nous disposons sont, pour chaque tournage :
+* type_de_tournage :	une String égale à "TELEFILM", "SERIE TELEVISEE" ou "LONG METRAGE"
+* organisme_demandeur :	une String correspondant à l'organisme demandeur du film
+* adresse	: une String correspond à l'adresse du tournage
+* date_debut : une String correspond à la date de début du tournage
+* date_fin : une String correspond à la date de fin du tournage
+* realisateur	: une String correspond au réalisateur
+* xy : un tableau de Double contenant les coordonnées [latitude, longitude]
+* ardt : Un entier correspondant à l'arrondissement dans lequel le tournage à eu lieu
+* titre	: Une string correspondant au titre du film/de la série
+
+
+
+
 ## Requête API
 Les données ont été trouvées sur [ce site](https://opendata.paris.fr/explore/dataset/tournagesdefilmsparis2011/api/).
 Une requête a été faite pour récupérer les données dans la MainActivity. Pour cela, un ```Uri.Builder``` a été utilisé : 
@@ -68,6 +83,7 @@ Pour le stockage dans cette base de donnée locale, le champ geometry a posé pr
 
 ### Map
 ## Création de la Map
+
 
 ## Utilisation de clusters
 
