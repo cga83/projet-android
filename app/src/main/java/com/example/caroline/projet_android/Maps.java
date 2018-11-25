@@ -28,10 +28,13 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Maps extends FragmentActivity implements OnMapReadyCallback,
         ClusterManager.OnClusterClickListener<LieuxTournageClusterItem>,
@@ -40,11 +43,9 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
 
     private GoogleMap mMap;
     private List<LieuxTournage> lieuxTournages = new ArrayList<>();
-    private boolean[] mSelectedItems = new boolean[3]; // ce tableau contient les filtres cochés
+    boolean[] mSelectedItems = new boolean[3]; // ce tableau contient les filtres cochés
     private EnumMap<TypeTournage, ClusterManager<LieuxTournageClusterItem>> clusterMap = new EnumMap<>(TypeTournage.class);
-//    private ClusterManager<LieuxTournageClusterItem> clusterManagerLongMetrage;
-//    private ClusterManager<LieuxTournageClusterItem> clusterManagerTelefilm;
-//    private ClusterManager<LieuxTournageClusterItem> clusterManagerSerie;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +105,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
                                     mSelectedItems[which] = true;
                                 } else {
                                     // Else, if the item is already in the array, remove it
-                                    mSelectedItems[which] =  false;
+                                   mSelectedItems[which] =  false;
                                 }
                             }
                         })
@@ -152,11 +153,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
-                for (ClusterManager cluster :
-                        clusterMap.values())
-                {
-                    cluster.cluster();
-                }
+                addMarkersToMap();
             }
         });
 
@@ -167,6 +164,10 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
 
     private void addMarkersToMap() {
         mMap.clear();
+        mMap.clear();
+        for (ClusterManager cluster : clusterMap.values()) {
+            cluster.clearItems();
+        }
         for (LieuxTournage lieux : lieuxTournages) {
             if (lieux.getXySize()>0) // Certains films n'ont pas de position associée
             {
@@ -177,6 +178,9 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback,
                 else if (lieux.getTypeDeTournage().equals(TypeTournage.SERIE.toString())&& mSelectedItems[2])
                     clusterMap.get(TypeTournage.of(lieux.getTypeDeTournage())).addItem(new LieuxTournageClusterItem(lieux));
             }
+        }
+        for (ClusterManager cluster : clusterMap.values()) {
+                cluster.cluster();
         }
     }
 
