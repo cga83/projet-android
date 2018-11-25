@@ -112,6 +112,7 @@ Afin d'améliorer l'expérience utilisateur, nous avons ajouté un boutton sur l
 L'information choix coché/décoché est stocké dans un tableau ```mSelectedItems```. Ce tableau est constitué de trois éléments (un pour chaque choix), tous initialisé à ```true```. Lorsqu'un choix est décoché, l'élément du tableau correspondant passe à false. La carte est vidée de ces markers et ils sont ajoutés à nouveau (si l'utilisateur a choisi de les afficher).
 
 En ne sélectionnant que les longs métrages, cela donne :
+
 ![Long Metrage](screenshot/maps_long_metrage.png?raw=true "Long Metrage")
 
 
