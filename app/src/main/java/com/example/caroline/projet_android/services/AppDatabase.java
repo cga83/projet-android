@@ -7,8 +7,6 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import com.example.caroline.projet_android.model.LieuxTournage;
-import com.example.caroline.projet_android.services.TournageDatabaseService;
-import com.example.caroline.projet_android.model.LieuxTournage;
 
 @Database(entities = {LieuxTournage.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {

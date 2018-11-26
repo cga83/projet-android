@@ -1,13 +1,9 @@
 package com.example.caroline.projet_android.model;
 
-import java.lang.reflect.Type;
-
 public enum TypeTournage {
 
     LONG_METRAGE("LONG METRAGE"),
-
     SERIE("SERIE TELEVISEE"),
-
     TELEFILM("TELEFILM");
 
     private final String name;

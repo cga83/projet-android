@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,28 +20,20 @@ import com.example.caroline.projet_android.services.AppDatabase;
 import com.example.caroline.projet_android.services.TournageDatabaseService;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnCameraIdleListener;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Maps extends Fragment implements OnMapReadyCallback,
         ClusterManager.OnClusterClickListener<LieuxTournageClusterItem>,
@@ -53,7 +44,7 @@ public class Maps extends Fragment implements OnMapReadyCallback,
     private GoogleMap mMap;
     private List<LieuxTournage> lieuxTournages = new ArrayList<>();
     boolean[] mSelectedItems = new boolean[3]; // ce tableau contient les filtres cochés
-    private EnumMap<TypeTournage, ClusterManager<LieuxTournageClusterItem>> clusterMap = new EnumMap<>(TypeTournage.class);
+    private EnumMap<TypeTournage, ClusterManager<LieuxTournageClusterItem>> clusterMap = new EnumMap<>(TypeTournage.class); // contient un ClusterManager pour chaque type de tournage
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,12 +60,14 @@ public class Maps extends Fragment implements OnMapReadyCallback,
         }
         mMapView.getMapAsync(this);
 
-        //On récupère les données dans la database
+        //On récupère la base de donnée locale
         TournageDatabaseService tournageDatabaseService = AppDatabase.getAppDatabase(getActivity().getApplicationContext()).getTournagesDatabaseService();
+        // On vide lieuxTournages au cas où il y avait déjà des éléments dedans
         lieuxTournages.clear();
+        // On remplit lieuxTournages avec les éléments de la base de donnée locale
         lieuxTournages = tournageDatabaseService.getAll();
 
-        // Au départ, tous les items sont cochés
+        // Au départ, tous les items sont cochés : on affiche sur la carte les trois types de tournages
         mSelectedItems[0] = true;
         mSelectedItems[1] = true;
         mSelectedItems[2] = true;
@@ -85,10 +78,6 @@ public class Maps extends Fragment implements OnMapReadyCallback,
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-//        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_tournages);
-//        mapFragment.getMapAsync(this);
     }
 
     /**
@@ -104,30 +93,34 @@ public class Maps extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        // Ajout d'un InfoWindowAdapter car les snippets ne tenaient pas sur une ligne
+        // Ajout d'un InfoWindowAdapter pour la customisation des snippets
         mMap.setInfoWindowAdapter(new CustomWindowInfoAdapter(getActivity().getApplicationContext()));
         // On positionne la carte au centre de Paris
         LatLng markerParis = new LatLng(48.861391, 2.334044);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParis, 14));
 
+        // On ajoute le bouton pour filtrer
         final Button button = (getView().findViewById(R.id.button_filters));
 
+        // Lorsque l'on clique sur le bouton, un alertDialog s'ouvre
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                // Cet alertDialog contient un MultiChoice
+                // Définition des choix
                 CharSequence[] mPossibleItems = new CharSequence[3];
                 mPossibleItems[0] = "Téléfilm";
                 mPossibleItems[1] = "Long Métrage";
                 mPossibleItems[2] = "Série Télévisée";
-                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext()); //Read Update
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 builder.setTitle("Choisis un filtre !")
                         .setMultiChoiceItems(mPossibleItems, mSelectedItems, new DialogInterface.OnMultiChoiceClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                                 if (isChecked) {
-                                    // If the user checked the item, add it to the selected items
+                                    // Si l'utilisateur sélectionne le choix, le type de tournage correspondant est visible sur la carte
                                     mSelectedItems[which] = true;
                                 } else {
-                                    // Else, if the item is already in the array, remove it
+                                    // Inversement, le type de tournage n'est plus visible sur la carte
                                    mSelectedItems[which] =  false;
                                 }
                             }
@@ -135,6 +128,7 @@ public class Maps extends Fragment implements OnMapReadyCallback,
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
+                                // lorsque l'utilisateur valide, les markers sont ajoutés sur la carte
                                 addMarkersToMap();
                             }
                         });
@@ -148,6 +142,7 @@ public class Maps extends Fragment implements OnMapReadyCallback,
         // Initialisation du cluster manager
         for (TypeTournage type : TypeTournage.values()){
             ClusterManager<LieuxTournageClusterItem> clusterManager = new ClusterManager<>(getActivity().getApplicationContext(), googleMap, globalMarkerManager);
+            // en fonction du type de tournage, on set le ClusterRender qui convient
             switch (type){
                 case SERIE:
                     clusterManager.setRenderer(new SerieClusterRender(getActivity().getApplicationContext(), googleMap, clusterManager));
@@ -159,6 +154,7 @@ public class Maps extends Fragment implements OnMapReadyCallback,
                     clusterManager.setRenderer(new LongMetrageClusterRender(getActivity().getApplicationContext(), googleMap, clusterManager));
                     break;
             }
+            // On ajoute les listeners
             clusterManager.setOnClusterClickListener(this);
             clusterManager.setOnClusterItemClickListener(this);
             clusterManager.setOnClusterItemInfoWindowClickListener(this);
@@ -181,7 +177,9 @@ public class Maps extends Fragment implements OnMapReadyCallback,
 
     }
 
+    // Cette fonction ajoute les markers dans le cluster (et donc à la carte)
     private void addMarkersToMap() {
+        // On vide la carte et les clusters au cas où il y a déjà des markers
         mMap.clear();
         for (ClusterManager cluster : clusterMap.values()) {
             cluster.clearItems();
@@ -189,6 +187,7 @@ public class Maps extends Fragment implements OnMapReadyCallback,
         for (LieuxTournage lieux : lieuxTournages) {
             if (lieux.getXySize()>0) // Certains films n'ont pas de position associée
             {
+                // Si le type de tournage du film est visible (filtre), on l'ajoute au cluster manager
                 if (lieux.getTypeDeTournage().equals(TypeTournage.LONG_METRAGE.toString()) && mSelectedItems[1])
                     clusterMap.get(TypeTournage.of(lieux.getTypeDeTournage())).addItem(new LieuxTournageClusterItem(lieux));
                 else if (lieux.getTypeDeTournage().equals(TypeTournage.TELEFILM.toString()) && mSelectedItems[0])
@@ -208,6 +207,7 @@ public class Maps extends Fragment implements OnMapReadyCallback,
         Collection<LieuxTournageClusterItem> lieuxTournagesMarkers = cluster.getItems();
 
         for (ClusterItem item : lieuxTournagesMarkers) {
+            // On récupère la position des éléments du cluster
             LatLng lieuxTournagePosition = item.getPosition();
             builder.include(lieuxTournagePosition);
         }
