@@ -190,4 +190,10 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    public void callDetails() {
+        Intent intent = new Intent(this, MovieDetailsActivity.class);
+        startActivity(intent);
+    }
 }
