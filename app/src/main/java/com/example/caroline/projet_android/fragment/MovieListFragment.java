@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.caroline.projet_android.MainActivity;
 import com.example.caroline.projet_android.MovieDetailsActivity;
 import com.example.caroline.projet_android.MovieElementAdapter;
 import com.example.caroline.projet_android.OnRecyclerViewMovieClickListener;
@@ -87,6 +88,8 @@ public class MovieListFragment extends Fragment implements OnRecyclerViewMovieCl
         switch (view.getId()) {
             case R.id.row_main_adapter_linear_layout:
                 System.out.println("Position clicked: " + String.valueOf(position) + ", "+ movie.getTitre());
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+
                 mListener.callDetails();
                 break;
         }

@@ -1,5 +1,6 @@
 package com.example.caroline.projet_android;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
             .build();
 
     TournageWebService tournageWebService = retrofit.create(TournageWebService.class);
+
 
     TournageDatabaseService tournageDatabaseService;
 
@@ -189,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
 
     @Override
     public void callDetails() {
-        Intent intent = new Intent(this, MovieDetailsActivity.class);
+        Intent intent = new Intent(MainActivity.this, MovieDetailsActivity.class);
         startActivity(intent);
     }
 }
