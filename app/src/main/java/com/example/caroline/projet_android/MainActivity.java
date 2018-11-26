@@ -190,8 +190,12 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
     }
 
     @Override
-    public void callDetails() {
+    public void callDetails(ElementListMovie movie) {
         Intent intent = new Intent(MainActivity.this, MovieDetailsActivity.class);
+        Bundle movieBundle = new Bundle();
+        movieBundle.putSerializable("movieElem",movie);
+        intent.putExtra(Intent.EXTRA_TEXT, movieBundle);
         startActivity(intent);
+
     }
 }

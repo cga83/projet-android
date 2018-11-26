@@ -90,7 +90,7 @@ public class MovieListFragment extends Fragment implements OnRecyclerViewMovieCl
                 System.out.println("Position clicked: " + String.valueOf(position) + ", "+ movie.getTitre());
                 getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 
-                mListener.callDetails();
+                mListener.callDetails(movie);
                 break;
         }
     }
