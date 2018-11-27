@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
 
 
 public class LieuxTournageRecord {
-
     @SerializedName("datasetid")
     private String datasetid;
     @PrimaryKey

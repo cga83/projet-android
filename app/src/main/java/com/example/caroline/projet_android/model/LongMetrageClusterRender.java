@@ -14,7 +14,6 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 
 public class LongMetrageClusterRender extends DefaultClusterRenderer<LieuxTournageClusterItem> {
-
     private final Context mContext;
     private final IconGenerator mClusterIconGenerator;
 
@@ -31,8 +30,7 @@ public class LongMetrageClusterRender extends DefaultClusterRenderer<LieuxTourna
 
     @Override
     protected void onBeforeClusterRendered(Cluster<LieuxTournageClusterItem> cluster, MarkerOptions markerOptions) {
-        mClusterIconGenerator.setBackground(
-                ContextCompat.getDrawable(mContext, R.drawable.cluster_long_metrage));
+        mClusterIconGenerator.setBackground(ContextCompat.getDrawable(mContext, R.drawable.cluster_long_metrage));
 
         mClusterIconGenerator.setTextAppearance(R.style.AppTheme_WhiteTextAppearance);
 
@@ -46,5 +44,4 @@ public class LongMetrageClusterRender extends DefaultClusterRenderer<LieuxTourna
         // Cluster dès qu'il y a plus de deux marqueurs
         return cluster.getSize() > 2;
     }
-
 }

@@ -31,8 +31,7 @@ public class SerieClusterRender extends DefaultClusterRenderer<LieuxTournageClus
 
     @Override
     protected void onBeforeClusterRendered(Cluster<LieuxTournageClusterItem> cluster, MarkerOptions markerOptions) {
-        mClusterIconGenerator.setBackground(
-                ContextCompat.getDrawable(mContext, R.drawable.cluster_serie));
+        mClusterIconGenerator.setBackground(ContextCompat.getDrawable(mContext, R.drawable.cluster_serie));
 
         mClusterIconGenerator.setTextAppearance(R.style.AppTheme_AccentTextAppearance);
 

@@ -9,6 +9,7 @@ public class LieuxTournageClusterItem implements ClusterItem {
     private String titre;
     private String snippet;
 
+    // Création d'un ClusterItem à partir d'un LieuxTournage
     public LieuxTournageClusterItem(LieuxTournage lieuxTournage) {
         latitude = lieuxTournage.getX();
         longitude = lieuxTournage.getY();

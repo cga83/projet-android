@@ -31,8 +31,7 @@ public class TelefilmClusterRender extends DefaultClusterRenderer<LieuxTournageC
 
     @Override
     protected void onBeforeClusterRendered(Cluster<LieuxTournageClusterItem> cluster, MarkerOptions markerOptions) {
-        mClusterIconGenerator.setBackground(
-                ContextCompat.getDrawable(mContext, R.drawable.cluster_telefilm));
+        mClusterIconGenerator.setBackground(ContextCompat.getDrawable(mContext, R.drawable.cluster_telefilm));
 
         mClusterIconGenerator.setTextAppearance(R.style.AppTheme_DarkTextAppearance);
 
