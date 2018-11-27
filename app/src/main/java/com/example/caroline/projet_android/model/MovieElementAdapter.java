@@ -1,4 +1,4 @@
-package com.example.caroline.projet_android;
+package com.example.caroline.projet_android.model;
 
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.caroline.projet_android.model.ElementListMovie;
+import com.example.caroline.projet_android.OnRecyclerViewMovieClickListener;
+import com.example.caroline.projet_android.R;
 
 import java.util.ArrayList;
 

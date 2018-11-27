@@ -1,7 +1,6 @@
 package com.example.caroline.projet_android.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,9 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.caroline.projet_android.MainActivity;
-import com.example.caroline.projet_android.MovieDetailsActivity;
-import com.example.caroline.projet_android.MovieElementAdapter;
+import com.example.caroline.projet_android.model.MovieElementAdapter;
 import com.example.caroline.projet_android.OnRecyclerViewMovieClickListener;
 import com.example.caroline.projet_android.R;
 import com.example.caroline.projet_android.model.ElementListMovie;
