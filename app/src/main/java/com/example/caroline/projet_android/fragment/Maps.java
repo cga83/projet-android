@@ -109,38 +109,36 @@ public class Maps extends Fragment implements OnMapReadyCallback,
         final Button button = (getView().findViewById(R.id.button_filters));
 
         // Lorsque l'on clique sur le bouton, un alertDialog s'ouvre
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Cet alertDialog contient un MultiChoice
-                // Définition des choix
-                CharSequence[] mPossibleItems = new CharSequence[3];
-                mPossibleItems[0] = "Téléfilm";
-                mPossibleItems[1] = "Long Métrage";
-                mPossibleItems[2] = "Série Télévisée";
-                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                builder.setTitle("Choisis un filtre !")
-                        .setMultiChoiceItems(mPossibleItems, mSelectedItems, new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                if (isChecked) {
-                                    // Si l'utilisateur sélectionne le choix, le type de tournage correspondant est visible sur la carte
-                                    mSelectedItems[which] = true;
-                                } else {
-                                    // Inversement, le type de tournage n'est plus visible sur la carte
-                                   mSelectedItems[which] =  false;
-                                }
+        button.setOnClickListener(v -> {
+            // Cet alertDialog contient un MultiChoice
+            // Définition des choix
+            CharSequence[] mPossibleItems = new CharSequence[3];
+            mPossibleItems[0] = "Téléfilm";
+            mPossibleItems[1] = "Long Métrage";
+            mPossibleItems[2] = "Série Télévisée";
+            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+            builder.setTitle("Choisis un filtre !")
+                    .setMultiChoiceItems(mPossibleItems, mSelectedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                            if (isChecked) {
+                                // Si l'utilisateur sélectionne le choix, le type de tournage correspondant est visible sur la carte
+                                mSelectedItems[which] = true;
+                            } else {
+                                // Inversement, le type de tournage n'est plus visible sur la carte
+                               mSelectedItems[which] =  false;
                             }
-                        })
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                // lorsque l'utilisateur valide, les markers sont ajoutés sur la carte
-                                addMarkersToMap();
-                            }
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
+                        }
+                    })
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            // lorsque l'utilisateur valide, les markers sont ajoutés sur la carte
+                            addMarkersToMap();
+                        }
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         });
 
         MarkerManager globalMarkerManager = new MarkerManager(mMap);
