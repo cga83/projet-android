@@ -1,4 +1,4 @@
-package com.example.caroline.projet_android;
+package com.example.caroline.projet_android.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.caroline.projet_android.R;
+import com.example.caroline.projet_android.model.CustomWindowInfoAdapter;
 import com.example.caroline.projet_android.model.LieuxTournage;
 import com.example.caroline.projet_android.model.LieuxTournageClusterItem;
 import com.example.caroline.projet_android.model.LongMetrageClusterRender;

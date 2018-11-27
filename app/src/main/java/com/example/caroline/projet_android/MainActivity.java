@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.caroline.projet_android.fragment.InfoFragment;
 import com.example.caroline.projet_android.fragment.InfoFragmentInterface;
+import com.example.caroline.projet_android.fragment.Maps;
 import com.example.caroline.projet_android.fragment.MovieListFragment;
 import com.example.caroline.projet_android.fragment.MovieListFragmentInterface;
 import com.example.caroline.projet_android.fragment.MoviesMapFragmentInterface;

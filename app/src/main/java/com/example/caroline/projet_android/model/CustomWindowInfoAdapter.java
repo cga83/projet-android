@@ -1,13 +1,15 @@
-package com.example.caroline.projet_android;
+package com.example.caroline.projet_android.model;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.caroline.projet_android.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
+// Création d'un CustomWindowAdapter pour faire apparaitre les snippets des markers sur la Maps
 public class CustomWindowInfoAdapter implements GoogleMap.InfoWindowAdapter{
 
     private final View mWindow;
