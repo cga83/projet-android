@@ -8,6 +8,7 @@ public class LieuxTournageClusterItem implements ClusterItem {
     private double longitude;
     private String titre;
     private String snippet;
+    private LieuxTournage lieux;
 
     // Création d'un ClusterItem à partir d'un LieuxTournage
     public LieuxTournageClusterItem(LieuxTournage lieuxTournage) {
@@ -18,11 +19,7 @@ public class LieuxTournageClusterItem implements ClusterItem {
                 " à l'adresse " +lieuxTournage.getAdresse() + " ("
                 + lieuxTournage.getArdt() + ") entre " + lieuxTournage.getDateDebut() + " et "
                 + lieuxTournage.getDateFin() + ".";
-    }
-
-    public LieuxTournageClusterItem(Double latitude, Double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+        lieux = lieuxTournage;
     }
 
     @Override
@@ -38,5 +35,13 @@ public class LieuxTournageClusterItem implements ClusterItem {
     @Override
     public String getSnippet() {
         return snippet;
+    }
+
+    public LieuxTournage getLieux() {
+        return lieux;
+    }
+
+    public void setLieux(LieuxTournage lieux) {
+        this.lieux = lieux;
     }
 }

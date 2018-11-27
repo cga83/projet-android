@@ -207,6 +207,5 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
         movieBundle.putSerializable("movieElem",movie);
         intent.putExtra(Intent.EXTRA_TEXT, movieBundle);
         startActivity(intent);
-
     }
 }

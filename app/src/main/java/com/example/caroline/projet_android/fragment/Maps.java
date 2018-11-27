@@ -2,6 +2,7 @@ package com.example.caroline.projet_android.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,8 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.caroline.projet_android.MainActivity;
+import com.example.caroline.projet_android.MovieDetailsActivity;
 import com.example.caroline.projet_android.R;
 import com.example.caroline.projet_android.model.CustomWindowInfoAdapter;
+import com.example.caroline.projet_android.model.ElementListMovie;
 import com.example.caroline.projet_android.model.LieuxTournage;
 import com.example.caroline.projet_android.model.LieuxTournageClusterItem;
 import com.example.caroline.projet_android.model.LongMetrageClusterRender;
@@ -176,6 +180,7 @@ public class Maps extends Fragment implements OnMapReadyCallback,
         });
         mMap.setOnMarkerClickListener(globalMarkerManager);
         mMap.setInfoWindowAdapter(globalMarkerManager);
+        mMap.setOnInfoWindowClickListener(globalMarkerManager);
 
     }
 
@@ -231,7 +236,13 @@ public class Maps extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onClusterItemInfoWindowClick(LieuxTournageClusterItem lieuxTournageClusterItem) {
-
+        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
+        Bundle movieBundle = new Bundle();
+        LieuxTournage lieuxTournage = lieuxTournageClusterItem.getLieux();
+        ElementListMovie elementListMovie = new ElementListMovie(lieuxTournage.getTitre(), lieuxTournage.getArdt(), lieuxTournage.getAdresse(), lieuxTournage.getTypeDeTournage(), lieuxTournage.getId());
+        movieBundle.putSerializable("movieElem",elementListMovie);
+        intent.putExtra(Intent.EXTRA_TEXT, movieBundle);
+        startActivity(intent);
     }
 }
 

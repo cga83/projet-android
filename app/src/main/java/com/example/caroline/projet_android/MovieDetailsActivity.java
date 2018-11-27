@@ -14,7 +14,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
-        Bundle bundle = getIntent().getBundleExtra(Intent.EXTRA_TEXT);;
+        Bundle bundle = getIntent().getBundleExtra(Intent.EXTRA_TEXT);
         ElementListMovie movies =(ElementListMovie) bundle.getSerializable("movieElem");
     }
 }
