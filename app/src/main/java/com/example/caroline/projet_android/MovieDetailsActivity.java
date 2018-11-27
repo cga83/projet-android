@@ -40,9 +40,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         TournageDatabaseService tournageDatabaseService = AppDatabase.getAppDatabase(this.getApplicationContext()).getTournagesDatabaseService();
         LieuxTournage tournage = tournageDatabaseService.getLieu(movie.getId());
 
-        Intent intent=new Intent();
-        intent.putExtra("MESSAGE","m");
-        setResult(1, intent);
+        setResult(1);
 
         titre = findViewById(R.id.titre);
         typeRealisateur = findViewById(R.id.type_realisateur);
@@ -58,11 +56,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         lieu.setText("Lieu : " + tournage.getAdresse() + " " + tournage.getArdt());
         exit.setOnClickListener( v ->
                 finish());
-
-
-
-
-
 
     }
 }

@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
             loadLieuxTournagesFromServer();
         }
 
+        //Démarrage du Fragment Welcome
         fragmentManager = getSupportFragmentManager();
         WelcomeScreenFragment welcomeFragment = new WelcomeScreenFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -147,8 +148,11 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
 
     }
 
-    @Override
+    /*
+    * Fonction appeler pour lancer le fragment qui affiche la liste des lieux de tournages
+    * */
     public void entrerToList() {
+        //Creation d'un Bundle qui contient tous les ElementListMovie a afficher dans la liste
         Bundle bundle = new Bundle();
         ArrayList<ElementListMovie> listMovies = new ArrayList<ElementListMovie>();
         lieuxTournages.forEach(lieuxTournage ->
@@ -176,19 +180,19 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.list:
+                //Lance le fragment de la liste des tournages
                 entrerToList();
                 return true;
             case R.id.map:
-//                Intent intent = new Intent(MainActivity.this, Maps.class);
-//                startActivity(intent);
+                //Lance le fragment de la map
                 fragmentManager = getSupportFragmentManager();
-//                MoviesMapFragment map = new MoviesMapFragment();
                 Maps map = new Maps();
                 FragmentTransaction fragmentTransaction1 = fragmentManager.beginTransaction();
                 fragmentTransaction1.replace(R.id.container, map);
                 fragmentTransaction1.commit();
                 return true;
             case R.id.info:
+                //Lance le fragment qui donne des info sur l'app
                 fragmentManager = getSupportFragmentManager();
                 InfoFragment info = new InfoFragment();
                 FragmentTransaction fragmentTransaction2 = fragmentManager.beginTransaction();
@@ -196,14 +200,14 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
                 fragmentTransaction2.commit();
                 return true;
 
-            default: // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
+            default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
     public void callDetails(ElementListMovie movie) {
+        //Lance l'activité qui affiche tout les détails d'un tournage
         Intent intent = new Intent(MainActivity.this, MovieDetailsActivity.class);
         Bundle movieBundle = new Bundle();
         movieBundle.putSerializable("movieElem",movie);
@@ -213,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        //Quand on quitte la page des détails on relance le fragment liste qu'on avait fermé
         super.onActivityResult(requestCode,resultCode,data);
         entrerToList();
 

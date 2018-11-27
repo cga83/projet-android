@@ -24,7 +24,6 @@ public class WelcomeScreenFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_welcome_screen, container, false);
         entrer = rootView.findViewById((R.id.button_enter_app));
 

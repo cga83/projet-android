@@ -34,9 +34,7 @@ public class MovieListFragment extends Fragment implements OnRecyclerViewMovieCl
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-
+        //Récupère l'ensemble des tournage à afficher
         Bundle bundle = getArguments();
         ArrayList<ElementListMovie> movies =(ArrayList<ElementListMovie>) bundle.getSerializable("movies");
 
@@ -48,12 +46,6 @@ public class MovieListFragment extends Fragment implements OnRecyclerViewMovieCl
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(rootview.getContext());
         rcvMovie.setLayoutManager(layoutManager);
 
-
-        // specify an adapter (see also next example)
-//        ElementListMovie movie = new ElementListMovie("Harry Potter", "2012");
-//
-//        movies.add(movie);
-//        movies.add(movie);
         movieAdapter = new MovieElementAdapter(movies);
         movieAdapter.setOnRecyclerViewMovieClickListener(this);
         rcvMovie.setAdapter(movieAdapter);
@@ -79,14 +71,16 @@ public class MovieListFragment extends Fragment implements OnRecyclerViewMovieCl
         mListener = null;
     }
 
+    /*
+        Fonction appeler quand on click sur un des elements de la liste
+        Elle demande au MainActivity d'afficher les details du film
+     */
     @Override
     public void onMovieClick(int position, View view) {
         ElementListMovie movie = (ElementListMovie) view.getTag();
         switch (view.getId()) {
             case R.id.row_main_adapter_linear_layout:
-                System.out.println("Position clicked: " + String.valueOf(position) + ", "+ movie.getTitre());
                 getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-
                 mListener.callDetails(movie);
                 break;
         }

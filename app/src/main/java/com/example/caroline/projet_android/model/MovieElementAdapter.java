@@ -40,7 +40,9 @@ public class MovieElementAdapter extends RecyclerView.Adapter<MovieElementAdapte
 
         viewholder.titre.setText(iconToDisplay.getTitre());
         viewholder.adresse.setText(iconToDisplay.getAdresse() + " " + iconToDisplay.getArdt());
-        if (iconToDisplay.getTypeTournage().equals("TELEFILM")) {
+
+        //Choix du logo a afficher en fonction du type de tournage
+        if (iconToDisplay.getTypeTournage().equals("TELEFILM")) { //TODO remplacer par l'enum
             viewholder.logo.setImageResource(R.drawable.ic_videocam_blue_24dp);
 
         } else if (iconToDisplay.getTypeTournage().equals("LONG METRAGE")) {
@@ -55,7 +57,6 @@ public class MovieElementAdapter extends RecyclerView.Adapter<MovieElementAdapte
         ElementListMovie movie = (ElementListMovie) view.getTag();
         switch (view.getId()) {
             case R.id.a_main_rcv_movies:
-               System.out.println("Position clicked: " + String.valueOf(position) + ", "+ movie.getTitre());
                 break;
         }
     }
@@ -77,6 +78,8 @@ public class MovieElementAdapter extends RecyclerView.Adapter<MovieElementAdapte
             this.adresse = rootView.findViewById(R.id.adresse);
             this.logo = rootView.findViewById(R.id.image);
             constraintLayout = rootView.findViewById(R.id.row_main_adapter_linear_layout);
+
+            // Ajout d'un listener de click pour pouvoir voir plus de details d'un tournage
             constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -3,10 +3,12 @@ package com.example.caroline.projet_android.model;
 import java.io.Serializable;
 
 public class ElementListMovie implements Serializable {
+    //Classe qui contient les element à afficher dans la liste des lieu de tournage et leur id
+
     private String titre;
     private Integer ardt;
     private String adresse;
-    private String typeTournage;
+    private String typeTournage; // Nous permet d'afficher la bonne couleur de logo en fonction du type de tournage
     private int id;
 
     public ElementListMovie(){
