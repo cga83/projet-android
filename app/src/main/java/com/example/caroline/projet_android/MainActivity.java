@@ -43,30 +43,34 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
 
     FragmentManager fragmentManager;
 
+    // Création de l'arraylist dans laquelle vont être stocké les lieux de tournages
     private ArrayList<LieuxTournage> lieuxTournages = new ArrayList<>();
 
+    // Implémentation du web service
     Retrofit retrofit = new Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl("https://opendata.paris.fr")
             .build();
-
     TournageWebService tournageWebService = retrofit.create(TournageWebService.class);
 
-
+    // Création de la base de donnée locale
     TournageDatabaseService tournageDatabaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e("url", BASE_URL);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        // Initialisation de la base de donnée locale
         tournageDatabaseService = AppDatabase.getAppDatabase(this).getTournagesDatabaseService();
 
+        // S'il y a des élements dans la base de donnée locale, on les utilise
         if (tournageDatabaseService.getAll().size()>0) {
             loadLieuxTournagesFromDatabase();
-        } else {
+        }
+        // Sinon, on récupère les informations sur les lieux de tournage en appelant l'API
+        // La première fois que l'on va lancer l'application, on va passer ici
+        else {
             loadLieuxTournagesFromServer();
         }
 
@@ -75,12 +79,12 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.container, welcomeFragment);
         fragmentTransaction.commit();
-
     }
 
     private void loadLieuxTournagesFromServer() {
+        // On vide l'ArrayList au cas où il y aurait déjà des éléments dedans
         lieuxTournages.clear();
-        //tournageDatabaseService.dropAll();
+        // On génére l'url
         Uri.Builder uri = new Uri.Builder();
         uri.scheme("https")
                 .authority(BASE_URL)
@@ -88,42 +92,49 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
                 .appendPath("records")
                 .appendPath("1.0")
                 .appendPath("search")
-                .appendQueryParameter("dataset", "tournagesdefilmsparis2011")
+                .appendQueryParameter("dataset", "tournagesdefilmsparis2011") // Ajout des paramètres (zone de l'url après le "?")
                 .appendQueryParameter("rows", NB_ROWS) // Chargement de toutes les données
                 .appendQueryParameter("facet", "realisateur")
                 .appendQueryParameter("facet", "organisme_demandeur")
                 .appendQueryParameter("facet","type_de_tournage")
                 .appendQueryParameter("facet","ardt");
+        // On fait la requête à cet url
         tournageWebService.getAllTournages(uri.build().toString())
                 .enqueue(new Callback<LieuxTournageRecords>() {
                     @Override
                     public void onResponse(@NonNull Call<LieuxTournageRecords> call,
                                            @NonNull Response<LieuxTournageRecords> response) {
+                        // On vide la base de donnée locale avant de la remplir au cas où il y aurait déjà des éléments
                         tournageDatabaseService.dropAll();
+                        // On va stocker le champ "records" de la réponse json dans un objet du type LieuxTournageRecords
+                        // serverTournages va contenir une liste d'objet de type LieuxTournageRecord
+                        // Chacun de ces objets va avoir un attribut "fields" : cet attribut contient les informations sur les lieux de tournages
                         LieuxTournageRecords serverTournages = response.body();
                         if (serverTournages != null) {
-                            for (LieuxTournageRecord record :
-                                    serverTournages.getTournages()) {
+                            for (LieuxTournageRecord record : serverTournages.getTournages()) {
+                                // On ajoute à notre ArrayList<LieuxTournage> ainsi qu'à la base de donnée locale l'attribut "fields" de chaque LieuxTournageRecord
                                 lieuxTournages.add(record.getFields());
                                 tournageDatabaseService.insert(record.getFields());
                             }
-                            System.out.println("done");
-                            //TODO : displayTournagesList();
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<LieuxTournageRecords> call,
                                           @NonNull Throwable t) {
+                        // Si ça ne fonctionne pas, on prévient l'utilisateur.
                         Toast.makeText(MainActivity.this, "Nous n'avons pas pu chargé les lieux de tournages.", Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
     private void loadLieuxTournagesFromDatabase() {
+        // On vide l'ArrayList avant de stocker les éléments à l'intérieur
         lieuxTournages.clear();
+        // On récupère les éléments de la base de donnée
         List<LieuxTournage> dbLieuxTournages = tournageDatabaseService.getAll();
 
+        // Si on a récupéré des éléments, on les ajoute à notre ArrayList
         if (dbLieuxTournages != null) {
             lieuxTournages.addAll(dbLieuxTournages);
         }
